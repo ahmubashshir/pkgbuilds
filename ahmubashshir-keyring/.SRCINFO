@@ -1,0 +1,17 @@
+pkgbase = ahmubashshir-keyring
+	pkgdesc = @ahmubashshir's keyring
+	pkgver = 2
+	pkgrel = 4
+	url = https://ahmubashshir.github.io
+	install = ahmubashshir-keyring.install
+	arch = any
+	license = GPL
+	depends = archlinux-keyring
+	source = ahmubashshir.gpg
+	source = ahmubashshir-revoked
+	source = ahmubashshir-trusted
+	sha512sums = 3dd87bf607221f86173f3fc5616b9baec7c910fc81a6d03a437f4d12f2c12276f0f016c4b9b2652e59534f00cb0303752d669e77c0ad60b8a9c09a6618d0cd80
+	sha512sums = cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
+	sha512sums = 23108d0b0900675ca8479f6fe51b2595cc649a4dc47cb4e011e2e423d45642315f52ce9d39eba3988b56289f48f19cc76057be54bd54b4660b841873791848a2
+
+pkgname = ahmubashshir-keyring

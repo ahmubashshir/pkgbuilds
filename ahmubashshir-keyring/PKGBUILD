@@ -1,0 +1,27 @@
+# Maintainer: Mubashshir <ahmubashshir@gmail.com>
+# Thanks for chaotic-aur's package that I've used as template!
+
+pkgname='ahmubashshir-keyring'
+pkgver='2'
+pkgrel=4
+pkgdesc="@ahmubashshir's keyring"
+arch=('any')
+url='https://ahmubashshir.github.io'
+license=('GPL')
+depends=('archlinux-keyring')
+install="ahmubashshir-keyring.install"
+source=(ahmubashshir.gpg
+ahmubashshir-revoked
+ahmubashshir-trusted)
+
+package() {
+  install -Dm644 -t \
+    "$pkgdir/usr/share/pacman/keyrings" \
+    ahmubashshir.gpg \
+    ahmubashshir-revoked \
+    ahmubashshir-trusted
+}
+
+sha512sums=('3dd87bf607221f86173f3fc5616b9baec7c910fc81a6d03a437f4d12f2c12276f0f016c4b9b2652e59534f00cb0303752d669e77c0ad60b8a9c09a6618d0cd80'
+            'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
+            '23108d0b0900675ca8479f6fe51b2595cc649a4dc47cb4e011e2e423d45642315f52ce9d39eba3988b56289f48f19cc76057be54bd54b4660b841873791848a2')
