@@ -1,0 +1,20 @@
+#!/bin/sh
+fsync()
+{
+	map="$1"
+	shift
+	rsync \
+		--usermap="$map" \
+		--groupmap="$map" \
+		-avz \
+		"$@"
+}
+
+case "$1" in
+	fetch)
+		fsync "$RUSER:user" "rsync://$RUSER@$RHOST/pacman/" /pkgs/repo/
+		;;
+	push)
+		fsync "user:$RUSER" /pkgs/repo/ "rsync://$RUSER@$RHOST/pacman/"
+		;;
+esac
