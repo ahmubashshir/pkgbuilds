@@ -1,0 +1,44 @@
+#!/bin/bash -e
+shopt -s nullglob
+shopt -s extglob
+
+built=()
+base=$(realpath "${0%/*}/..")
+helpers="$base/.helpers"
+
+cd "$base" || exit 1
+touch pkgs.txt ipc
+
+for each in */; do
+	unset pkgs pkgbase
+	truncate ipc -s 0
+
+	pkgbase=$(basename "$each")
+	[[ -f $pkgbase/PKGBUILD ]] || continue
+	if grep -q "$pkgbase" buildignore; then
+		printf '::notice file=buildignore::Skip building %s\n' "$pkgbase" >&2
+		continue
+	else
+		printf '::group::Build %s\n' "$pkgbase" >&2
+	fi
+	pushd "$pkgbase" || {
+		printf '::error:: file=%s,line=25::Failed to change directory: %s' "$0" "$pkgbase" >&2
+		printf '::endgroup::\n' >&2
+		continue
+	}
+
+	# Get dependencies
+	"$helpers/maint/deps"
+	# Build package
+	if "$helpers/build"; then
+		readarray -t pkgs < "$base/ipc"
+		built+=("${pkgs[@]}")
+		printf '::debug::Built package: %s\n' "${pkgs[@]}" >&2
+	fi
+	"$helpers/maint/deps" --clean
+	popd || :
+	printf '::endgroup::\n' >&2
+done
+
+printf '::debug:: Pruning packages\n' >&2
+# TODO: prune
