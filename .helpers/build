@@ -1,0 +1,46 @@
+#!/bin/bash
+shopt -s nullglob
+shopt -s extglob
+
+base=$(realpath "${0%/*}/..")
+helpers="$base/.helpers"
+
+pkgbase="$(basename "$PWD")"
+if [[ -d "$base/$pkgbase" && "$PWD" != "$base/$pkgbase" ]]; then
+	cd "$base/$pkgbase"
+fi
+printf '::debug::Building pkgbase: %s\n' "$pkgbase" >&2
+
+# Override pkgrel
+echo "eval pkgrel=\$(
+	pacman -Si \${depends[@]} \
+	| awk -v sum=\"\$pkgrel\" '/Version/{sum+=substr(\$0,match(\$0,/[^-]+$/))}END{print sum}'
+)" >> PKGBUILD
+
+# Build package
+env SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase" makepkg --config ~/makepkg.conf --nocheck "$@" >&2
+ret=$?
+
+# Update meta info
+if ((ret == 0 || ret == 13)); then
+	( (
+		cat "$base/pkgs.txt" 2> /dev/null || :
+		makepkg --config ~/makepkg.conf --packagelist
+	) | sort -u >> "$base/pkgs.txt~" && mv "$base/pkgs.txt"{~,}) >&2
+
+	printf '::debug::Checking built packages\n' >&2
+	(
+		source ~/makepkg.conf
+		makepkg --config ~/makepkg.conf --packagelist \
+			| xargs -d $'\n' -n 1 env "PKGDEST=$PKGDEST" testpkg
+		cd "$PKGDEST"
+		repose -zf "$REPO"
+	) >&2
+	ret=$?
+
+	(makepkg --config ~/makepkg.conf --printsrcinfo \
+		| awk '/pkgname/{print $3}' >> "$base/ipc") >&2
+	ret=$?
+fi
+
+exit $ret
