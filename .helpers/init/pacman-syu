@@ -1,0 +1,6 @@
+#!/bin/sh
+pacman -Syu --noprogressbar --noconfirm
+cat >> /etc/pacman.conf << EOF
+[${REPO:-$GITHUB_REPOSITORY}]
+Server = file:////pkgs/repo
+EOF

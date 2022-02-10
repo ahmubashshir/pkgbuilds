@@ -1,0 +1,11 @@
+#!/bin/sh -e
+useradd -m -U -r -b /var user
+
+echo "user ALL=(ALL) NOPASSWD: /usr/bin/pacman" \
+	> /etc/sudoers.d/allow_user_to_pacman
+for each in build src repo/logs; do
+	mkdir -p "/pkgs/$each"
+done
+
+chown -R user:user /pkgs .
+chmod -R 755 /pkgs
