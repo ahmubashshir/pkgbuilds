@@ -1,0 +1,6 @@
+#!/bin/sh
+pacman-key --init
+touch /usr/share/pacman/keyrings/local-revoked
+mv /var/user/local.gpg /usr/share/pacman/keyrings/
+mv /var/user/local-trusted /usr/share/pacman/keyrings/
+pacman-key --populate

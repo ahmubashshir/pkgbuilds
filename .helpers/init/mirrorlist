@@ -1,0 +1,17 @@
+#!/bin/sh
+pacman -Sy --noprogressbar --noconfirm pacman-contrib rsync reflector repose
+
+reflector \
+	--save /etc/pacman.d/mirrorlist \
+	--latest 20 \
+	--age 12 \
+	--sort rate \
+	--protocol https,http,ftp \
+	2> /dev/null
+
+if
+	rankmirrors /etc/pacman.d/mirrorlist \
+		> /etc/pacman.d/mirrorlist~
+then
+	mv /etc/pacman.d/mirrorlist{~,}
+fi
