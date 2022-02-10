@@ -1,0 +1,71 @@
+name: aur
+
+on:
+  # Allow manual start
+  workflow_dispatch:
+  push:
+    branches:
+    - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: aur
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: 'pkgbuilds'
+        fetch-depth: 0
+
+    - name: Configure ssh
+      run: |
+        mkdir -p ~/.ssh
+        cat > ~/.ssh/config <<EOF
+        Host aur
+          Port 22
+          User aur
+          IdentityFile ~/.ssh/key
+          StrictHostKeyChecking no
+          HostName aur.archlinux.org
+        EOF
+
+        echo "$KEY" > ~/.ssh/key
+        chmod -R 700 ~/.ssh
+        ssh-keyscan aur.archlinux.org > ~/.ssh/known_hosts
+        ssh aur help &> /dev/null
+      env:
+        KEY: ${{ secrets.SSH_KEY }}
+    - name: Setup aurpublish
+      run: |
+        exec > /dev/null
+        git clone --quiet https://github.com/eli-schwartz/aurpublish ~/aurpublish
+        sed -i '/^all:/s/ man//;/for manfile/,/done/d' ~/aurpublish/Makefile
+        make BASHCOMPDIR=$HOME/bcd PREFIX=$HOME install -C ~/aurpublish
+        rm -rf ~/aurpublish
+        cd pkgbuilds
+        $HOME/bin/aurpublish setup
+    - name: Publish pkgbuilds
+      if: ${{ !env.ACT }}
+      run: |
+        cd pkgbuilds
+
+        git reset --hard
+        git config user.email "ahmubashshir@gmail.com"
+        git config user.name "Mubashshir"
+
+        for each in */;do
+          [[ -f "$each/.noaur" ]] && continue
+          [[ -f "$each/PKGBUILD" ]] || continue
+          (
+            source "$each/PKGBUILD"
+            printf '::group::Publish %s\n' "${pkgbase:-$pkgname}"
+          )
+          "$HOME/bin/aurpublish" -p "$each"
+          "$HOME/bin/aurpublish" "$each"
+          printf '::endgroup::\n'
+        done
+
+    - name: Push changes
+      if: ${{ !env.ACT }}
+      run: git -C pkgbuilds push
