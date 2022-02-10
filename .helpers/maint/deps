@@ -1,0 +1,27 @@
+#!/bin/bash
+if [[ $1 == --clean ]]; then
+	yay -Yc --nosave --noprogressbar --noconfirm
+else
+	deps()
+	{
+		yay -Sy --needed --noprogressbar --asdeps --noconfirm "$@"
+	}
+
+	source ./PKGBUILD
+	if ((${#depends[@]} > 0)); then
+		printf "%0.s-" {1..80} >&2
+		printf "\n::notice file=$PWD/PKGBUILD::RDEP: %s" "${depends[@]}" >&2
+	fi
+	if ((${#makedepends[@]} > 0)); then
+		printf '\n' >&2
+		printf "%0.s-" {1..80} >&2
+		printf "\n::notice file=$PWD/PKGBUILD::MAKE: %s" "${makedepends[@]}" >&2
+	fi
+	if ((${#depends[@]} + ${#makedepends[@]} > 0)); then
+		printf '\n' >&2
+		printf "%0.s-" {1..80} >&2
+		printf '\n' >&2
+	fi
+	((${#depends[@]} == 0)) || deps --makepkg "$helpers/build" "${depends[@]}"
+	((${#makedepends[@]} == 0)) || deps "${makedepends[@]}"
+fi
