@@ -11,11 +11,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: aur
+    container:
+      image: ghcr.io/greyltc/archlinux-aur:yay
+      options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        path: 'pkgbuilds'
         fetch-depth: 0
 
     - name: Configure ssh
@@ -37,19 +39,10 @@ jobs:
       env:
         KEY: ${{ secrets.SSH_KEY }}
     - name: Setup aurpublish
-      run: |
-        exec > /dev/null
-        git clone --quiet https://github.com/eli-schwartz/aurpublish ~/aurpublish
-        sed -i '/^all:/s/ man//;/for manfile/,/done/d' ~/aurpublish/Makefile
-        make BASHCOMPDIR=$HOME/bcd PREFIX=$HOME install -C ~/aurpublish
-        rm -rf ~/aurpublish
-        cd pkgbuilds
-        $HOME/bin/aurpublish setup
+      run: ./.helpers/aur/pub setup
     - name: Publish pkgbuilds
       if: ${{ !env.ACT }}
       run: |
-        cd pkgbuilds
-
         git reset --hard
         git config user.email "ahmubashshir@gmail.com"
         git config user.name "Mubashshir"
@@ -61,11 +54,10 @@ jobs:
             source "$each/PKGBUILD"
             printf '::group::Publish %s\n' "${pkgbase:-$pkgname}"
           )
-          "$HOME/bin/aurpublish" -p "$each"
-          "$HOME/bin/aurpublish" "$each"
+          ./.helpers/aur/pub -p "$each"
+          ./.helpers/aur/pub    "$each"
           printf '::endgroup::\n'
         done
 
     - name: Push changes
-      if: ${{ !env.ACT }}
       run: git -C pkgbuilds push
