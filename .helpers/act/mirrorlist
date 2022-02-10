@@ -1,0 +1,10 @@
+#!/bin/sh
+cat > /etc/pacman.d/mirrorlist << EOF || :
+Server = https://asia.mirror.pkgbuild.com/\$repo/os/\$arch
+Server = http://phinau.de/arch/\$repo/os/\$arch
+Server = http://mirror.luzea.de/archlinux/\$repo/os/\$arch
+Server = http://mirror.lty.me/archlinux/\$repo/os/\$arch
+Server = https://mirror.luzea.de/archlinux/\$repo/os/\$arch
+Server = https://phinau.de/arch/\$repo/os/\$arch
+Server = https://europe.mirror.pkgbuild.com/\$repo/os/\$arch
+EOF
