@@ -12,9 +12,9 @@ fsync()
 
 case "$1" in
 	fetch)
-		fsync "$RUSER:user" "rsync://$RUSER@$RHOST/pacman/" /pkgs/repo/
+		fsync "$RUSER:user" "rsync://$RUSER@$RHOST/$RSMOD/" /pkgs/repo/
 		;;
 	push)
-		fsync "user:$RUSER" /pkgs/repo/ "rsync://$RUSER@$RHOST/pacman/"
+		fsync "user:$RUSER" /pkgs/repo/ "rsync://$RUSER@$RHOST/$RSMOD/"
 		;;
 esac
