@@ -12,13 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: aur
     container:
-      image: ghcr.io/greyltc/archlinux-aur:yay
+      image: ghcr.io/greyltc/archlinux:latest
       options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
+    - name: Install dependencies
+      run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh
 
     - name: Configure ssh
       run: |
@@ -60,4 +63,5 @@ jobs:
         done
 
     - name: Push changes
-      run: git -C pkgbuilds push
+      if: ${{ !env.ACT }}
+      run: git push
