@@ -1,12 +1,13 @@
 #!/bin/bash
+ret=0
 if [[ $1 == --clean ]]; then
 	yay -Yc --nosave --noprogressbar --noconfirm
 else
 	deps()
 	{
-		yay -Sy --needed --noprogressbar --asdeps --noconfirm "$@"
+		yay -Syu --needed --noprogressbar --asdeps --noconfirm "$@"
 	}
-
+	helpers=$(realpath "${0%/*}/..")
 	source ./PKGBUILD
 	if ((${#depends[@]} > 0)); then
 		printf "%0.s-" {1..80} >&2
@@ -22,6 +23,10 @@ else
 		printf "%0.s-" {1..80} >&2
 		printf '\n' >&2
 	fi
-	((${#depends[@]} == 0)) || deps --makepkg "$helpers/build" "${depends[@]}"
+	((${#depends[@]} == 0)) || deps "${depends[@]}" \
+		--makepkg      "$helpers/build" --makepkgconf ~/makepkg.conf
+	((ret += $?))
 	((${#makedepends[@]} == 0)) || deps "${makedepends[@]}"
+	((ret += $?))
 fi
+exit $ret

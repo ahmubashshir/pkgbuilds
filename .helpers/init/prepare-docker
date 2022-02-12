@@ -54,7 +54,7 @@ PACKAGER="$MAINT <$EMAIL>"
 GPGKEY="$GPGFP"
 BUILDDIR=/pkgs/build
 PKGDEST=/pkgs/repo
-LOGDEST=/pkgs/repo/logs
+LOGDEST=/pkgs/logs
 
 PKGEXT='.pkg.tar.zst'
 SRCEXT='.src.tar.gz'

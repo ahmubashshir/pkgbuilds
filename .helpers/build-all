@@ -7,11 +7,12 @@ base=$(realpath "${0%/*}/..")
 helpers="$base/.helpers"
 
 cd "$base" || exit 1
-touch pkgs.txt ipc
+
+truncate -s 0 pkgs.txt ipc
 
 for each in */; do
 	unset pkgs pkgbase
-	truncate ipc -s 0
+	truncate -s 0 ipc
 
 	pkgbase=$(basename "$each")
 	[[ -f $pkgbase/PKGBUILD ]] || continue
@@ -27,18 +28,21 @@ for each in */; do
 		continue
 	}
 
-	# Get dependencies
-	"$helpers/maint/deps"
-	# Build package
-	if "$helpers/build"; then
+	if
+		"$helpers/maint/deps" \
+			&&
+			# Get dependencies
+			"$helpers/build" # Build package
+	then
 		readarray -t pkgs < "$base/ipc"
 		built+=("${pkgs[@]}")
 		printf '::debug::Built package: %s\n' "${pkgs[@]}" >&2
+	else
+		printf '::error:: file=%s,line=33::Failed to build: %s\n' "$0" "$pkgbase" >&2
 	fi
 	"$helpers/maint/deps" --clean
 	popd || :
 	printf '::endgroup::\n' >&2
 done
 
-printf '::debug:: Pruning packages\n' >&2
 # TODO: prune

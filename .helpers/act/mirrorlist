@@ -1,4 +1,7 @@
 #!/bin/sh
+if [ -f /tmp/.mirrorlist ]; then
+	exit 0
+fi
 cat > /etc/pacman.d/mirrorlist << EOF || :
 Server = https://asia.mirror.pkgbuild.com/\$repo/os/\$arch
 Server = http://phinau.de/arch/\$repo/os/\$arch

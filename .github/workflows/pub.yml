@@ -1,0 +1,82 @@
+name: build
+
+on:
+  # Allow manual start
+  workflow_dispatch:
+  # Run job on 00:00UTC daily
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: buildpkg
+    container:
+      image: ghcr.io/greyltc/archlinux:latest
+      options: -u root -v ${{ github.workspace }}:/workdir:rw
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Prepare build user
+      run: . ./.helpers/init/useradd
+
+    - name: Prepare build environment
+      run: su user -c ./.helpers/init/prepare-docker
+      env:
+        GPG_KEY: ${{ secrets.GPG_KEY }}
+        REPO:    ahm-aur
+
+    - name: Prepare pacman-keyrings
+      run: . ./.helpers/init/keyring
+
+    - name: Add local mirrors
+      if: ${{ env.ACT }}
+      run: . ./.helpers/act/mirrorlist
+
+    - name: Update pacman-mirrors
+      run: . ./.helpers/init/mirrorlist
+
+    - name: Update build environment
+      run: . ./.helpers/init/pacman-syu
+
+    - name: Init pkgs cache
+      uses: actions/cache@v2
+      with:
+        key: pkg-build-${{ hashFiles('*.sig') }}
+        path: /pkgs/repo
+        restore-keys: pkg-build-
+
+    - name: Fetch remote
+      run: ./.helpers/maint/rsync fetch
+      env:
+        RUSER: ${{ secrets.REPO_USER }}
+        RHOST: ${{ secrets.REPO_HOST }}
+        RSMOD: pacman
+        RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
+
+    - name: Build packages
+      run: su user -c ./.helpers/build-all
+    - name: Prune packages
+      run: su user -c ./.helpers/maint/prune-pkg
+      env:
+        REPO: ahm-aur
+
+    - name: Push remote
+      run: ./.helpers/maint/rsync push
+      env:
+        RUSER: ${{ secrets.REPO_USER }}
+        RHOST: ${{ secrets.REPO_HOST }}
+        RSMOD: pacman
+        RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
+
+    - name: Upload logs
+      if: ${{ env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: log
+        path: /pkgs/logs
+        if-no-files-found: warn
+        retention-days: 4
+# vim: ft=yaml:ts=2:et:

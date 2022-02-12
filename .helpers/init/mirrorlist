@@ -1,5 +1,19 @@
 #!/bin/sh
-pacman -Sy --noprogressbar --noconfirm pacman-contrib rsync reflector repose
+pacman -Sy --needed --noprogressbar --noconfirm rsync reflector repose sudo
+
+if [ ! -f /usr/bin/yay ]; then
+	curl -sH "Accept: application/vnd.github.v3+json" \
+		"https://api.github.com/repos/Jguer/yay/releases/latest" |
+		sed -nE '/browser_download_url/{/x86_64/s/^.*: "(.*)".*$/\1/p}' |
+		xargs curl -sL |
+		bsdtar --strip-components 1 -xf - -C /usr/bin '*/yay'
+fi
+
+if [ ! -f /tmp/.mirrorlist ]; then
+	touch /tmp/.mirrorlist
+else
+	exit 0
+fi
 
 reflector \
 	--save /etc/pacman.d/mirrorlist \
@@ -13,5 +27,5 @@ if
 	rankmirrors /etc/pacman.d/mirrorlist \
 		> /etc/pacman.d/mirrorlist~
 then
-	mv /etc/pacman.d/mirrorlist{~,}
+	mv /etc/pacman.d/mirrorlist~ /etc/pacman.d/mirrorlist
 fi
