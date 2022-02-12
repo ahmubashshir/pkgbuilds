@@ -15,13 +15,13 @@ jobs:
       image: ghcr.io/greyltc/archlinux:latest
       options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
+    - name: Install dependencies
+      run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-
-    - name: Install dependencies
-      run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh
 
     - name: Configure ssh
       run: |
