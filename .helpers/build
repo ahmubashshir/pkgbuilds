@@ -9,38 +9,51 @@ pkgbase="$(basename "$PWD")"
 if [[ -d "$base/$pkgbase" && "$PWD" != "$base/$pkgbase" ]]; then
 	cd "$base/$pkgbase"
 fi
-printf '::debug::Building pkgbase: %s\n' "$pkgbase" >&2
-
 # Override pkgrel
-echo "eval pkgrel=\$(
-	pacman -Si \${depends[@]} \
-	| awk -v sum=\"\$pkgrel\" '/Version/{sum+=substr(\$0,match(\$0,/[^-]+$/))}END{print sum}'
-)" >> PKGBUILD
+if ! grep -q 'eval '\''pkgrel=' PKGBUILD; then
+	cat >> PKGBUILD << EOF
+eval 'pkgrel=\$(
+        pacman -Si "\${depends[@]}" \\
+        | awk -v sum="\$pkgrel" $(printf %q '/Version/{sum+=substr($0,match($0,/[^-]+$/))}END{print sum}')
+)'
+EOF
+fi
+
+if ! grep -q -- '--config '$HOME'/makepkg.conf' <<< "$*"; then
+	set -- --config ~/makepkg.conf "$@"
+fi
+
+if printf '%s\n' "$@" \
+	| grep -qE -- '^(--(verifysource|nobuild|geninteg|source)|-[[:alnum:]]*(o|g|S).*)$'; then
+	export SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase"
+	exec makepkg "$@"
+fi
 
 # Build package
-env SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase" makepkg --config ~/makepkg.conf --nocheck "$@" >&2
+printf '::debug::Building pkgbase: %s\n' "$pkgbase" >&2
+env SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase" makepkg --nocheck "$@"
 ret=$?
 
 # Update meta info
 if ((ret == 0 || ret == 13)); then
-	( (
+	(
 		cat "$base/pkgs.txt" 2> /dev/null || :
-		makepkg --config ~/makepkg.conf --packagelist
-	) | sort -u >> "$base/pkgs.txt~" && mv "$base/pkgs.txt"{~,}) >&2
+		makepkg --config ~/makepkg.conf --packagelist 2> /dev/null
+	) \
+		| sort -u >> "$base/pkgs.txt~" \
+		&& mv "$base/pkgs.txt"{~,}
 
 	printf '::debug::Checking built packages\n' >&2
 	(
 		source ~/makepkg.conf
-		makepkg --config ~/makepkg.conf --packagelist \
-			| xargs -d $'\n' -n 1 env "PKGDEST=$PKGDEST" testpkg
-		cd "$PKGDEST"
-		repose -zf "$REPO"
+		makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
+			| xargs -r -d $'\n' -n 1 env "PKGDEST=$PKGDEST" testpkg
 	) >&2
-	ret=$?
+	((ret += $?))
 
-	(makepkg --config ~/makepkg.conf --printsrcinfo \
+	(makepkg --config ~/makepkg.conf --printsrcinfo 2> /dev/null \
 		| awk '/pkgname/{print $3}' >> "$base/ipc") >&2
-	ret=$?
+	((ret += $?))
 fi
 
 exit $ret

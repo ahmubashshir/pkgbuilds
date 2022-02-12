@@ -6,7 +6,8 @@ fsync()
 	rsync \
 		--usermap="$map" \
 		--groupmap="$map" \
-		-avz \
+		--delete \
+		-avzh \
 		"$@"
 }
 
