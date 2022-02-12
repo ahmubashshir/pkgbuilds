@@ -1,4 +1,4 @@
-name: aurpublish
+name: push(aurpublish)
 
 on:
   # Allow manual start
@@ -25,28 +25,39 @@ jobs:
 
     - name: Configure ssh
       run: |
-        mkdir -p ~/.ssh
-        cat > ~/.ssh/config <<EOF
-        Host aur
-          Port 22
+        mkdir -p /root/.ssh
+        chmod -R 700 /root/.ssh
+        cd /root/.ssh
+
+        printf "${{ secrets.SSH_KEY }}\n" > id_rsa
+        chmod 400 id_rsa
+
+        ssh-keyscan aur.archlinux.org > known_hosts
+        chmod 644 known_hosts
+
+        cat > config <<EOF
+        Host aur aur.archlinux.org
           User aur
-          IdentityFile ~/.ssh/key
           HostName aur.archlinux.org
         EOF
-
-        echo "$KEY" > ~/.ssh/key
-        chmod -R 700 ~/.ssh
-        ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
-      env:
-        KEY: ${{ secrets.SSH_KEY }}
     - name: Setup aurpublish
       run: ./.helpers/aur/pub setup
+
+    - name: Init subtree cache
+      uses: actions/cache@v2
+      with:
+        key: subtree-${{ hashFiles('*') }}
+        path: ./.git/subtree-cache
+        restore-keys: subtree-
+
     - name: Publish pkgbuilds
+      shell: bash
       if: ${{ !env.ACT }}
       run: |
         git reset --hard
         git config user.email "ahmubashshir@gmail.com"
         git config user.name "Mubashshir"
+        git config "url.ssh://aur@aur.archlinux.org/.insteadOf" "aur:"
 
         for each in */;do
           [[ -f "$each/.noaur" ]] && continue
