@@ -1,4 +1,6 @@
 #!/bin/bash -e
+source "${0%/*}/util.sh"
+
 shopt -s nullglob
 shopt -s extglob
 
@@ -17,13 +19,13 @@ for each in */; do
 	pkgbase=$(basename "$each")
 	[[ -f $pkgbase/PKGBUILD ]] || continue
 	if grep -xqF "$pkgbase" "$base/buildignore"; then
-		printf '::notice file=buildignore::Skip building %s\n' "$pkgbase" >&2
+		warn 'file=buildignore' 'Skip building %s' "$pkgbase"
 		continue
 	else
-		printf '::group::Build %s\n' "$pkgbase" >&2
+		printf "::group::${GREEN}${BOLD}Build %s${ALL_OFF}\n" "$pkgbase"
 	fi
 	pushd "$pkgbase" || {
-		printf '::error:: file=%s,line=25::Failed to change directory: %s' "$0" "$pkgbase" >&2
+		fail 'file=%s,line=25' 'Failed to change directory: %s' "$0" "$pkgbase"
 		printf '::endgroup::\n' >&2
 		continue
 	}
@@ -32,16 +34,17 @@ for each in */; do
 		if "$helpers/build"; then # Build package
 			readarray -t pkgs < "$base/ipc"
 			built+=("${pkgs[@]}")
-			printf '::debug::Built package: %s\n' "${pkgs[@]}" >&2
+			dbug 'Built package: %s' "${pkgs[@]}"
 		else
-			printf '::error:: file=%s,line=34::Failed to build: %s\n' "$0" "$pkgbase" >&2
+			fail 'file=%s,line=34' 'Failed to build: %s' "$0" "$pkgbase"
 		fi
 	else
-		printf '::error:: file=%s,line=32::Failed to install dependencies of: %s\n' "$0" "$pkgbase" >&2
+		fail 'file=%s,line=32' 'Failed to install dependencies of: %s' "$0" "$pkgbase"
 	fi
 	"$helpers/maint/deps" --clean
 	popd || :
-	printf '::endgroup::\n' >&2
+	printf '::endgroup::\n'
 done
 
-# TODO: prune
+# Sort the prune whitelist
+sort -u < "$base/pkgs.txt" > "$base/pkgs.txt~" && mv "$base/pkgs.txt"{~,}

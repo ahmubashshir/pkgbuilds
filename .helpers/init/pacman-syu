@@ -1,7 +1,39 @@
 #!/bin/sh
-pacman -Syu  --overwrite="*" --noprogressbar --noconfirm --needed base-devel git dash libedit
+if ! grep -q '^\[multilib\]' /etc/pacman.conf; then
+	cat >> /etc/pacman.conf << EOF
+# Enable multilib repo
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+EOF
+fi
+
+if [ ! -f /usr/share/libalpm/hooks/01-makepkg-ci.hook ]; then
+	cat <<EOF | base64 -d | zstdcat > /usr/share/makepkg.patch
+KLUv/QRYtQkAllNDJ9AobQ5oE8UMiVyz1iSgh5ltcGgFjUIUsE5ayuCcp0LzhRccRsEFBDgAOAA5
+APfWb9tN3EWWKbCbuK6LWltgr1trrUKRZXYAW8bFGPgeuxXbirHFhlor5fwTKnUIHBGAP+vDUPQE
+Ynne0+YokqU35yTzTYIv+wOWZY8eig91GtR5wOkponqlvksm81BpEgxX+SjcgYOrnG7b9YVAAguY
+SaT66XS46Ngg8waUiTpFXWFsj0g8OZ9lfbM5NVLXAG7xsuf4ukumumUd36zXaB6KlZIkEanzzxgU
+wcu5S/ijs5zSdZbIu0xu/JG9xiEQ78uZu9nleBpOuxT1aS+IhiPeJ2le036heBOMg/saGUkOAH0I
+GKkhvYlxLTEfiOudFsZZ58ArmYKUwJKqCGAIu+zceYkSBrvFXVw=
+EOF
+
+	cat > /usr/share/libalpm/hooks/01-makepkg-ci.hook <<EOF
+[Trigger]
+Operation = Upgrade
+Operation = Install
+Type = File
+Target = usr/bin/makepkg
+
+[Action]
+Description = Patching makepkg for Github Actions
+When = PostTransaction
+Exec = /usr/bin/env patch -d usr/bin --input /usr/share/makepkg.patch
+EOF
+	patch -d /usr/bin --input /usr/share/makepkg.patch
+fi
 
 if [ -f /usr/share/libalpm/hooks/01-fix-sh.hook ]; then
 	rm /usr/share/libalpm/hooks/01-fix-sh.hook
-	/usr/bin/ln -sfT bash /usr/bin/sh
 fi
+
+pacman -Syu --color always --overwrite="*" --noprogressbar --noconfirm --needed base-devel dash libedit bash pacman

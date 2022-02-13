@@ -17,6 +17,12 @@ jobs:
       image: ghcr.io/greyltc/archlinux:latest
       options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
+    - name: Install workflow dependencies
+      run: pacman -Sy nodejs patch git --overwrite="*" --noprogressbar --noconfirm --needed
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Prepare build user
       run: . ./.helpers/init/useradd
 
@@ -38,10 +44,6 @@ jobs:
 
     - name: Update build environment
       run: . ./.helpers/init/pacman-syu
-
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
 
     - name: Init pkgs cache
       uses: actions/cache@v2
