@@ -1,14 +1,15 @@
 #!/bin/bash
+source "${0%/*}/util.sh"
 shopt -s nullglob
 shopt -s extglob
 
 base=$(realpath "${0%/*}/..")
-helpers="$base/.helpers"
 
 pkgbase="$(basename "$PWD")"
 if [[ -d "$base/$pkgbase" && "$PWD" != "$base/$pkgbase" ]]; then
-	cd "$base/$pkgbase"
+	cd "$base/$pkgbase" || :
 fi
+
 # Override pkgrel
 if ! grep -q 'eval '\''pkgrel=' PKGBUILD; then
 	cat >> PKGBUILD << EOF
@@ -19,7 +20,7 @@ eval 'pkgrel=\$(
 EOF
 fi
 
-if ! grep -q -- '--config '$HOME'/makepkg.conf' <<< "$*"; then
+if ! grep -q -- '--config '"$HOME"'/makepkg.conf' <<< "$*"; then
 	set -- --config ~/makepkg.conf "$@"
 fi
 
@@ -30,30 +31,27 @@ if printf '%s\n' "$@" \
 fi
 
 # Build package
-printf '::debug::Building pkgbase: %s\n' "$pkgbase" >&2
+dbug 'Building pkgbase: %s' "$pkgbase"
 env SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase" makepkg --nocheck "$@"
 ret=$?
 
 # Update meta info
 if ((ret == 0 || ret == 13)); then
-	(
-		cat "$base/pkgs.txt" 2> /dev/null || :
-		makepkg --config ~/makepkg.conf --packagelist 2> /dev/null
-	) \
-		| sort -u >> "$base/pkgs.txt~" \
-		&& mv "$base/pkgs.txt"{~,}
+	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null >> "$base/pkgs.txt"
 
-	printf '::debug::Checking built packages\n' >&2
-	(
-		source ~/makepkg.conf
-		makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
-			| xargs -r -d $'\n' -n 1 env "PKGDEST=$PKGDEST" testpkg
-	) >&2
+	dbug 'Checking built packages' >&2
+	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
+		| xargs -r -d $'\n' -n 1 env "PKGDEST=$(
+			source ~/makepkg.conf
+			echo "$PKGDEST"
+		)" testpkg >&2
 	((ret += $?))
 
-	(makepkg --config ~/makepkg.conf --printsrcinfo 2> /dev/null \
-		| awk '/pkgname/{print $3}' >> "$base/ipc") >&2
+	makepkg --config ~/makepkg.conf --printsrcinfo 2> /dev/null \
+		| awk '/pkgname/{print $3}' >> "$base/ipc"
 	((ret += $?))
+else
+	fail 'file=%s' 'Failed to build: %s' "$PWD/PKGBUILD" "$pkgbase"
 fi
 
 exit $ret
