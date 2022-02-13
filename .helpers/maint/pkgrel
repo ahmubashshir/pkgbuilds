@@ -1,0 +1,71 @@
+#!/bin/bash
+source "${0%/*}/../util.sh"
+if [[ ! -f PKGBUILD ]]; then
+	warn 'file=PKGBUILD' 'File not found'
+	exit
+fi
+file=/pkgs/repo/pkgrel.txt
+
+if ! ${CI:-false}; then
+	file="${0%/*}/pkgrel.txt"
+fi
+touch "$file"
+
+## pkgrel calc start
+_pkgrel_=0
+sed -i '/^eval pkgrel=/d' PKGBUILD
+
+pkgbase="$(basename "$PWD")"
+readarray -t depends < <(
+	exec 2> /dev/null
+	makepkg --printsrcinfo \
+		| awk '/\sdepends/{print $3}'
+)
+
+read -r pkgver pkgrel < <(
+	exec 2> /dev/null
+	makepkg --printsrcinfo \
+		| awk '/pkg(ver|rel)/{printf $3" "}'
+)
+
+if ((${#depends[@]} == 0)); then
+	exit
+fi
+
+depsum="$(
+	for dep in "${depends[@]}"; do
+		pacman -Qi "$dep" \
+			| awk '/Name/   {printf $3" "}
+				/Version/{ print $3   }'
+	done | sort -u | sha256sum | awk '{print $1}'
+)"
+
+line="$pkgbase:$pkgver:$depsum"
+
+if grep -q "^$pkgbase:" "$file"; then
+	IFS=: read -r _ _pkgver_ _depsum_ _pkgrel_ < <(
+		grep "^$pkgbase:" "$file"
+	)
+else
+	echo "$line:${_pkgrel_}" >> "$file"
+	exit
+fi
+
+if [[ $pkgver != ${_pkgver_} ]]; then
+	sed -i "/^$pkgbase:/c\\$line:0" "$file"
+	exit
+fi
+
+if [[ $depsum != ${_depsum_} ]]; then
+	((_pkgrel_ += 1))
+	sed -i "/^$pkgbase:/c\\$line:${_pkgrel_}" "$file"
+fi
+
+if ((_pkgrel_ == 0)); then
+	exit
+fi
+
+cat >> PKGBUILD << EOF
+
+eval pkgrel=$((pkgrel + _pkgrel_))
+EOF

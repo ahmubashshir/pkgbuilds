@@ -11,14 +11,7 @@ if [[ -d "$base/$pkgbase" && "$PWD" != "$base/$pkgbase" ]]; then
 fi
 
 # Override pkgrel
-if ! grep -q 'eval '\''pkgrel=' PKGBUILD; then
-	cat >> PKGBUILD << EOF
-eval 'pkgrel=\$(
-        pacman -Si "\${depends[@]}" \\
-        | awk -v sum="\$pkgrel" $(printf %q '/Version/{sum+=substr($0,match($0,/[^-]+$/))}END{print sum}')
-)'
-EOF
-fi
+"${0%/*}/maint/pkgrel"
 
 if ! grep -q -- '--config '"$HOME"'/makepkg.conf' <<< "$*"; then
 	set -- --config ~/makepkg.conf "$@"
