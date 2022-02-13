@@ -35,8 +35,6 @@ for each in */; do
 			readarray -t pkgs < "$base/ipc"
 			built+=("${pkgs[@]}")
 			dbug 'Built package: %s' "${pkgs[@]}"
-		else
-			fail 'file=%s,line=34' 'Failed to build: %s' "$0" "$pkgbase"
 		fi
 	else
 		fail 'file=%s,line=32' 'Failed to install dependencies of: %s' "$0" "$pkgbase"

@@ -6,33 +6,61 @@ shopt -s extglob
 base=$(realpath "${0%/*}/..")
 
 pkgbase="$(basename "$PWD")"
-if [[ -d "$base/$pkgbase" && "$PWD" != "$base/$pkgbase" ]]; then
-	cd "$base/$pkgbase" || :
+sha()
+{
+	sha256sum "$1" | awk '{print $1}'
+}
+
+NOBUILDOPTS=$(
+	grep BUILDPKG=0 /usr/bin/makepkg \
+		| cut -d\) -f1 \
+		| awk '{print $1}' \
+		| tr '|' '\n'
+)
+
+NOBUILDOPTS="--($(
+	awk -F - '/^--/{printf $3"|"}' <<< "$NOBUILDOPTS" \
+		| sed 's/|$/\n/'
+))|-[^-]*($(
+	awk -F - '/^-/ && ! /^--/ {printf $2"|"}' <<< "$NOBUILDOPTS" \
+		| sed 's/|$/\n/'
+)).*"
+
+if [[ -d "$base/$pkgbase" && "$PWD" != "$base/$pkgbase" && ! -f .rsynced ]]; then
+	rsync --stderr=all -aqz "$base/$pkgbase/" . >&2
+	touch .rsynced
+fi
+
+if ! grep -q -- '--config '"$HOME"'/makepkg.conf' <<< "$*"; then
+	set -- --config ~/makepkg.conf "$@"
+fi
+export SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase"
+
+if printf '%s\n' "$@" \
+	| grep -qE -- '^('"$NOBUILDOPTS"')$'; then
+	exec makepkg "$@"
 fi
 
 # Override pkgrel
 "${0%/*}/maint/pkgrel"
 
-if ! grep -q -- '--config '"$HOME"'/makepkg.conf' <<< "$*"; then
-	set -- --config ~/makepkg.conf "$@"
-fi
-
-if printf '%s\n' "$@" \
-	| grep -qE -- '^(--(verifysource|nobuild|geninteg|source)|-[[:alnum:]]*(o|g|S).*)$'; then
-	export SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase"
-	exec makepkg "$@"
-fi
-
 # Build package
 dbug 'Building pkgbase: %s' "$pkgbase"
-env SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase" makepkg --nocheck "$@"
+makepkg --nocheck "$@"
 ret=$?
+
+if [[ -f .rsynced ]]; then
+	rm .rsynced
+fi
 
 # Update meta info
 if ((ret == 0 || ret == 13)); then
+	if ((ret == 13)); then
+		ret=0
+	fi
 	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null >> "$base/pkgs.txt"
 
-	dbug 'Checking built packages' >&2
+	info 'Checking built packages'
 	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
 		| xargs -r -d $'\n' -n 1 env "PKGDEST=$(
 			source ~/makepkg.conf
