@@ -16,7 +16,7 @@ for each in */; do
 
 	pkgbase=$(basename "$each")
 	[[ -f $pkgbase/PKGBUILD ]] || continue
-	if grep -q "$pkgbase" buildignore; then
+	if grep -xqF "$pkgbase" "$base/buildignore"; then
 		printf '::notice file=buildignore::Skip building %s\n' "$pkgbase" >&2
 		continue
 	else
@@ -28,17 +28,16 @@ for each in */; do
 		continue
 	}
 
-	if
-		"$helpers/maint/deps" \
-			&&
-			# Get dependencies
-			"$helpers/build" # Build package
-	then
-		readarray -t pkgs < "$base/ipc"
-		built+=("${pkgs[@]}")
-		printf '::debug::Built package: %s\n' "${pkgs[@]}" >&2
+	if "$helpers/maint/deps"; then # Get dependencies
+		if "$helpers/build"; then # Build package
+			readarray -t pkgs < "$base/ipc"
+			built+=("${pkgs[@]}")
+			printf '::debug::Built package: %s\n' "${pkgs[@]}" >&2
+		else
+			printf '::error:: file=%s,line=34::Failed to build: %s\n' "$0" "$pkgbase" >&2
+		fi
 	else
-		printf '::error:: file=%s,line=33::Failed to build: %s\n' "$0" "$pkgbase" >&2
+		printf '::error:: file=%s,line=32::Failed to install dependencies of: %s\n' "$0" "$pkgbase" >&2
 	fi
 	"$helpers/maint/deps" --clean
 	popd || :
