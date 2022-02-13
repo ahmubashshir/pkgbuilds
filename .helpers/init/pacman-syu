@@ -1,2 +1,7 @@
 #!/bin/sh
-pacman -Syu --noprogressbar --noconfirm --needed base-devel git
+pacman -Syu  --overwrite="*" --noprogressbar --noconfirm --needed base-devel git dash libedit
+
+if [ -f /usr/share/libalpm/hooks/01-fix-sh.hook ]; then
+	rm /usr/share/libalpm/hooks/01-fix-sh.hook
+	/usr/bin/ln -sfT bash /usr/bin/sh
+fi
