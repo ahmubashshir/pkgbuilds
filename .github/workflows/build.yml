@@ -15,10 +15,6 @@ jobs:
       image: ghcr.io/greyltc/archlinux:latest
       options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
     - name: Prepare build user
       run: . ./.helpers/init/useradd
 
@@ -40,6 +36,10 @@ jobs:
 
     - name: Update build environment
       run: . ./.helpers/init/pacman-syu
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Init pkgs cache
       uses: actions/cache@v2
