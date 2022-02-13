@@ -1,4 +1,4 @@
-name: push(aurpublish)
+name: publish
 
 on:
   # Allow manual start
@@ -10,6 +10,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    concurrency:
+      group:  ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     environment: aur
     container:
       image: ghcr.io/greyltc/archlinux:latest
