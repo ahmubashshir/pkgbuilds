@@ -17,14 +17,12 @@ sed -i '/^eval pkgrel=/d' PKGBUILD
 
 pkgbase="$(basename "$PWD")"
 readarray -t depends < <(
-	exec 2> /dev/null
-	makepkg --printsrcinfo \
+	makepkg --printsrcinfo 2> /dev/null \
 		| awk '/\sdepends/{print $3}'
 )
 
 read -r pkgver pkgrel < <(
-	exec 2> /dev/null
-	makepkg --printsrcinfo \
+	makepkg --printsrcinfo 2> /dev/null \
 		| awk '/pkg(ver|rel)/{printf $3" "}'
 )
 
