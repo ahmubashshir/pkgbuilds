@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group:  ${{ github.workflow }}-${{ github.ref }}
     environment: buildpkg
     container:
       image: ghcr.io/greyltc/archlinux:latest
