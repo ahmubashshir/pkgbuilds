@@ -1,12 +1,12 @@
 #!/bin/bash -e
-source "${0%/*}/util.sh"
-
 shopt -s nullglob
 shopt -s extglob
 
 built=()
 base=$(realpath "${0%/*}/..")
 helpers="$base/.helpers"
+
+source "$helpers/util.sh"
 
 cd "$base" || exit 1
 

@@ -1,9 +1,9 @@
 #!/bin/sh
-fsync()
+rsync()
 {
 	map="$1"
 	shift
-	rsync \
+	exec rsync \
 		--usermap="$map" \
 		--groupmap="$map" \
 		--delete \
@@ -12,10 +12,15 @@ fsync()
 }
 
 case "$1" in
-	fetch)
-		fsync "$RUSER:user" "rsync://$RUSER@$RHOST/$RSMOD/" /pkgs/repo/
+	pull)
+		rsync "$RUSER:user" "rsync://$RUSER@$RHOST/$RSMOD/" ./.pkgs/repo/
 		;;
 	push)
-		fsync "user:$RUSER" /pkgs/repo/ "rsync://$RUSER@$RHOST/$RSMOD/"
+		rsync "user:$RUSER" ./.pkgs/repo/ "rsync://$RUSER@$RHOST/$RSMOD/"
+		;;
+	fetch)
+		rsync "$RUSER:user" \
+			-m --include="*.sig" --exclude="*" \
+			"rsync://$RUSER@$RHOST/$RSMOD/" ./.pkgs/repo/
 		;;
 esac

@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/sh -ex
+set -x
 
 mkdir -p ~/.gnupg
 chmod 700 ~/.gnupg
@@ -12,8 +13,8 @@ echo "user ALL=(ALL) NOPASSWD: /usr/bin/pacman" \
 	> /etc/sudoers.d/allow_user_to_pacman
 
 for each in build src repo logs; do
-	mkdir -p "/pkgs/$each"
+	mkdir -p ".pkgs/$each"
 done
 
-chown -R user:user /pkgs . /var/user/.gnupg
-chmod -R 755 /pkgs
+chown -R user:user . /var/user/.gnupg
+chmod -R 755 .pkgs

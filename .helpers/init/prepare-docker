@@ -1,11 +1,12 @@
 #!/bin/bash
+base=$(realpath "${0%/*}/../..")
 MAINT="${MAINT:-$(getent passwd $USER | cut -d: -f5 | cut -d, -f1 | grep '..*' || echo $USER)}"
 REPO=${REPO:-$(dirname "$GITHUB_REPOSITORY")}
 EMAIL="${EMAIL:-$USER@$HOSTNAME}"
 
 tar cvf - --files-from /dev/null \
-	| gzip -c -f -n > "/pkgs/repo/$REPO.db.tar.gz"
-ln -sf "$REPO.db.tar.gz" "/pkgs/repo/$REPO.db"
+	| gzip -c -f -n > "$base/.pkgs/repo/$REPO.db.tar.gz"
+ln -sf "$REPO.db.tar.gz" "$base/.pkgs/repo/$REPO.db"
 
 if [[ -n $GPG_KEY ]]; then
 	gpg --import <<< "$GPG_KEY"
@@ -52,9 +53,9 @@ OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 
 PACKAGER="$MAINT <$EMAIL>"
 GPGKEY="$GPGFP"
-BUILDDIR=/pkgs/build
-PKGDEST=/pkgs/repo
-LOGDEST=/pkgs/logs
+BUILDDIR="$base/.pkgs/build"
+PKGDEST="$base/.pkgs/repo"
+LOGDEST="$base/.pkgs/logs"
 
 PKGEXT='.pkg.tar.zst'
 SRCEXT='.src.tar.gz'

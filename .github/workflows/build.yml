@@ -15,7 +15,6 @@ jobs:
     environment: buildpkg
     container:
       image: ghcr.io/greyltc/archlinux:latest
-      options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
     - name: Install workflow dependencies
       run: pacman -Sy nodejs patch git --overwrite="*" --noprogressbar --noconfirm --needed
@@ -45,15 +44,23 @@ jobs:
     - name: Update build environment
       run: . ./.helpers/init/pacman-syu
 
-    - name: Init pkgs cache
+    - name: Fetch package signatures
+      run: ./.helpers/maint/rsync fetch
+      env:
+        RUSER: ${{ secrets.REPO_USER }}
+        RHOST: ${{ secrets.REPO_HOST }}
+        RSMOD: pacman
+        RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
+
+    - name: Init cache
       uses: actions/cache@v2
       with:
-        key: pkg-build-${{ hashFiles('*.sig') }}
-        path: /pkgs/repo
-        restore-keys: pkg-build-
+        key: makepkg-${{ hashFiles('./.pkgs/repo/*.sig') }}
+        path: ./.pkgs/repo
+        restore-keys: makepkg-
 
-    - name: Fetch remote
-      run: ./.helpers/maint/rsync fetch
+    - name: Pull remote
+      run: ./.helpers/maint/rsync pull
       env:
         RUSER: ${{ secrets.REPO_USER }}
         RHOST: ${{ secrets.REPO_HOST }}
@@ -80,7 +87,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: log
-        path: /pkgs/logs
+        path: ./.pkgs/logs
         if-no-files-found: warn
         retention-days: 4
 # vim: ft=yaml:ts=2:et:
