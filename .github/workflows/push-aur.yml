@@ -1,4 +1,4 @@
-name: publish
+name: push-aur
 
 on:
   # Allow manual start
@@ -48,9 +48,9 @@ jobs:
     - name: Init subtree cache
       uses: actions/cache@v2
       with:
-        key: subtree-${{ hashFiles('*') }}
+        key: tree-${{ hashFiles('./.git/subtree-cache/**') }}
         path: ./.git/subtree-cache
-        restore-keys: subtree-
+        restore-keys: tree-
 
     - name: Publish pkgbuilds
       shell: bash
