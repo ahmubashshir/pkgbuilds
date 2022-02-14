@@ -34,7 +34,7 @@ fi
 if ! grep -q -- '--config '"$HOME"'/makepkg.conf' <<< "$*"; then
 	set -- --config ~/makepkg.conf "$@"
 fi
-export SRCDEST="${REPO_PREFIX}/pkgs/src/$pkgbase"
+export SRCDEST="$base/.pkgs/src/$pkgbase"
 
 if printf '%s\n' "$@" \
 	| grep -qE -- '^('"$NOBUILDOPTS"')$'; then

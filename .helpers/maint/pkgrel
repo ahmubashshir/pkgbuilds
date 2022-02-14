@@ -1,10 +1,11 @@
 #!/bin/bash
+base="$(realpath "${0%/*}/../..")"
 source "${0%/*}/../util.sh"
 if [[ ! -f PKGBUILD ]]; then
 	warn 'file=PKGBUILD' 'File not found'
 	exit
 fi
-file=/pkgs/repo/pkgrel.txt
+file="$base/.pkgs/repo/pkgrel.txt"
 
 if ! ${CI:-false}; then
 	file="${0%/*}/pkgrel.txt"
