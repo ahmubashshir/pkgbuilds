@@ -1,6 +1,4 @@
-#!/bin/sh -ex
-set -x
-
+#!/bin/sh -e
 mkdir -p ~/.gnupg
 chmod 700 ~/.gnupg
 
