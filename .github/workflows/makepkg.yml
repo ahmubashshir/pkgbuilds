@@ -1,4 +1,4 @@
-name: build
+name: makepkg
 
 on:
   # Allow manual start
@@ -20,9 +20,11 @@ jobs:
     - name: Install workflow dependencies
       run: pacman -Sy nodejs patch git --overwrite="*" --noprogressbar --noconfirm --needed
 
-    - uses: actions/checkout@v2
+    - name: Checkout repo
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
     - name: Prepare build user
       run: . ./.helpers/init/useradd
 
@@ -54,6 +56,7 @@ jobs:
         RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
 
     - name: Init cache
+      if: ${{ !env.ACT }}
       uses: actions/cache@v2
       with:
         key: makepkg-${{ hashFiles('./.pkgs/repo/*.sig') }}
@@ -70,6 +73,7 @@ jobs:
 
     - name: Build packages
       run: su user -c ./.helpers/build-all
+
     - name: Prune packages
       run: su user -c ./.helpers/maint/prune-pkg
       env:
@@ -84,7 +88,7 @@ jobs:
         RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
 
     - name: Upload logs
-      if: ${{ env.ACT }}
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: log
