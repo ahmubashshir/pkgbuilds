@@ -16,7 +16,6 @@ jobs:
     environment: aur
     container:
       image: ghcr.io/greyltc/archlinux:latest
-      options: -u root -v ${{ github.workspace }}:/workdir:rw
     steps:
     - name: Install dependencies
       run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh

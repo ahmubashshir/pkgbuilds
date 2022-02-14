@@ -15,6 +15,7 @@ jobs:
     environment: buildpkg
     container:
       image: ghcr.io/greyltc/archlinux:latest
+      options: -u root
     steps:
     - name: Install workflow dependencies
       run: pacman -Sy nodejs patch git --overwrite="*" --noprogressbar --noconfirm --needed
