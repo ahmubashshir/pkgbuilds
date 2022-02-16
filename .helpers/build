@@ -10,7 +10,7 @@ sha()
 {
 	sha256sum "$1" | awk '{print $1}'
 }
-
+NOBUILD=0
 NOBUILDOPTS=$(
 	grep BUILDPKG=0 /usr/bin/makepkg \
 		| cut -d\) -f1 \
@@ -34,15 +34,25 @@ fi
 if ! grep -q -- '--config '"$HOME"'/makepkg.conf' <<< "$*"; then
 	set -- --config ~/makepkg.conf "$@"
 fi
+
 export SRCDEST="$base/.pkgs/src/$pkgbase"
 
 if printf '%s\n' "$@" \
 	| grep -qE -- '^('"$NOBUILDOPTS"')$'; then
-	exec makepkg "$@"
+	NOBUILD=1
 fi
 
 # Override pkgrel
-"${0%/*}/maint/pkgrel"
+if ((NOBUILD == 0)) \
+	|| (printf '%s\n' "$@" \
+		| grep -qE -- '^--packagelist$'); then
+	"${0%/*}/maint/pkgrel"
+fi
+
+if ((NOBUILD)); then
+	"${0%/*}/maint/pkgs"
+	exec makepkg "$@"
+fi
 
 # Build package
 dbug 'Building pkgbase: %s' "$pkgbase"
@@ -58,7 +68,7 @@ if ((ret == 0 || ret == 13)); then
 	if ((ret == 13)); then
 		ret=0
 	fi
-	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null >> "$base/pkgs.txt"
+	"${0%/*}/maint/pkgs"
 
 	info 'Checking built packages'
 	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \

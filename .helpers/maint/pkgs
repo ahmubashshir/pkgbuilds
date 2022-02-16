@@ -1,0 +1,11 @@
+#!/bin/bash
+base="$(realpath "${0%/*}/../..")"
+
+pkgbase="$(basename "$PWD")"
+sed -i "/^$pkgbase:/d" "$base/pkgs.txt"
+
+makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
+	| while read -r pkg; do
+		[ -f "$pkg" ] || continue
+		printf '%s:%s\n' "$pkgbase" "$pkg" >> "$base/pkgs.txt"
+	done

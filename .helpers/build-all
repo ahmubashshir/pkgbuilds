@@ -45,4 +45,8 @@ for each in */; do
 done
 
 # Sort the prune whitelist
-sort -u < "$base/pkgs.txt" > "$base/pkgs.txt~" && mv "$base/pkgs.txt"{~,}
+(
+	set -e
+	cut -d: -f2- "$base/pkgs.txt" \
+		| sort -u > "$base/txt.pkgs"
+) && mv "$base/txt.pkgs" "$base/pkgs.txt"
