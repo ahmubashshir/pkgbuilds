@@ -10,17 +10,20 @@ rsync()
 		-avzh \
 		"$@"
 }
-
-case "$1" in
+task="$1"
+shift
+case "$task" in
 	pull)
-		rsync "$RUSER:user" "rsync://$RUSER@$RHOST/$RSMOD/" ./.pkgs/repo/
+		rsync "$RUSER:user" "$@" \
+			"rsync://$RUSER@$RHOST/$RSMOD/" ./.pkgs/repo/
 		;;
 	push)
-		rsync "user:$RUSER" ./.pkgs/repo/ "rsync://$RUSER@$RHOST/$RSMOD/"
+		rsync "user:$RUSER" "$@" \
+			./.pkgs/repo/ "rsync://$RUSER@$RHOST/$RSMOD/"
 		;;
 	fetch)
 		rsync "$RUSER:user" \
-			-m --include="*.sig" --exclude="*" \
+			-m --include="*.sig" --exclude="*" "$@" \
 			"rsync://$RUSER@$RHOST/$RSMOD/" ./.pkgs/repo/
 		;;
 esac
