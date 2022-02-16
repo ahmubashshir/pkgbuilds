@@ -5,8 +5,7 @@ REPO=${REPO:-$(dirname "$GITHUB_REPOSITORY")}
 EMAIL="${EMAIL:-$USER@$HOSTNAME}"
 
 tar cvf - --files-from /dev/null \
-	| gzip -c -f -n > "$base/.pkgs/repo/$REPO.db.tar.gz"
-ln -sf "$REPO.db.tar.gz" "$base/.pkgs/repo/$REPO.db"
+	| gzip -c -f -n > "$base/.pkgs/repo/$REPO.db"
 
 if [[ -n $GPG_KEY ]]; then
 	gpg --import <<< "$GPG_KEY"
