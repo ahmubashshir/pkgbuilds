@@ -1,5 +1,8 @@
 #!/bin/bash
+source "${0%/*}/../util.sh"
+
 base="$(realpath "${0%/*}/../..")"
+ret=0
 
 pkgbase="$(basename "$PWD")"
 sed -i "/^$pkgbase:/d" "$base/pkgs.txt"
@@ -9,3 +12,26 @@ makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
 		[ -f "$pkg" ] || continue
 		printf '%s:%s\n' "$pkgbase" "$pkg" >> "$base/pkgs.txt"
 	done
+((ret += $?))
+
+info 'Checking built packages'
+makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
+	| xargs -r -d $'\n' -n 1 env "PKGDEST=$(
+		source ~/makepkg.conf
+		echo "$PKGDEST"
+	)" testpkg >&2
+
+((ret += $?))
+
+makepkg --config ~/makepkg.conf --printsrcinfo 2> /dev/null \
+	| awk '/pkgname/{print $3}' \
+	| while read -r pkg; do
+		sed -i "/^$pkg$/d" "$base/ipc"
+	done
+
+makepkg --config ~/makepkg.conf --printsrcinfo 2> /dev/null \
+	| awk '/pkgname/{print $3}' >> "$base/ipc"
+
+((ret += $?))
+
+exit $ret
