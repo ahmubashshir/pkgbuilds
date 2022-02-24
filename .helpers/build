@@ -69,17 +69,6 @@ if ((ret == 0 || ret == 13)); then
 		ret=0
 	fi
 	"${0%/*}/maint/pkgs"
-
-	info 'Checking built packages'
-	makepkg --config ~/makepkg.conf --packagelist 2> /dev/null \
-		| xargs -r -d $'\n' -n 1 env "PKGDEST=$(
-			source ~/makepkg.conf
-			echo "$PKGDEST"
-		)" testpkg >&2
-	((ret += $?))
-
-	makepkg --config ~/makepkg.conf --printsrcinfo 2> /dev/null \
-		| awk '/pkgname/{print $3}' >> "$base/ipc"
 	((ret += $?))
 else
 	fail 'file=%s' 'Failed to build: %s' "$PWD/PKGBUILD" "$pkgbase"
