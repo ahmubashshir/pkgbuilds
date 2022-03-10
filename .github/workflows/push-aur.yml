@@ -45,12 +45,20 @@ jobs:
     - name: Setup aurpublish
       run: ./.helpers/aur/pub setup
 
+    - name: Prepare subtree key
+      id: subtree-cache
+      run: |
+        git log --format=oneline \
+        | grep -E '[a-z0-9]{40}\s\w+\s'\''[[:alnum:]-]+/'\''\s\w+\scommit\s'\''[a-z0-9]{40}'\''$' \
+        | awk '{print $1}' | sha512sum \
+        | awk '{print "::set-output name=hash::"$1}'
+
     - name: Init subtree cache
       uses: actions/cache@v2
       with:
-        key: tree-${{ hashFiles('./.git/subtree-cache/**') }}
+        key: subtree-${{ steps.subtree-cache.outputs.hash }}
         path: ./.git/subtree-cache
-        restore-keys: tree-
+        restore-keys: subtree-
 
     - name: Publish pkgbuilds
       shell: bash
