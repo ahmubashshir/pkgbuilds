@@ -1,0 +1,61 @@
+pkgbase = quassel
+	pkgver = 0.14.0
+	pkgrel = 1
+	url = http://quassel-irc.org
+	arch = i686
+	arch = x86_64
+	arch = arm
+	arch = aarch64
+	license = GPL
+	makedepends = git
+	makedepends = cmake
+	makedepends = extra-cmake-modules
+	makedepends = hicolor-icon-theme
+	makedepends = knotifyconfig
+	makedepends = python
+	makedepends = qca
+	makedepends = qt5-base
+	makedepends = qt5-script
+	makedepends = qt5-tools
+	makedepends = qt5-webkit
+	makedepends = boost
+	source = git+https://github.com/quassel/quassel.git
+	md5sums = SKIP
+
+pkgname = quassel-git
+	pkgdesc = KDE-based IRC client (monolithic version)
+	depends = hicolor-icon-theme
+	depends = knotifyconfig
+	depends = qca
+	depends = qt5-base
+	depends = qt5-script
+	depends = qt5-webkit
+
+pkgname = quassel-light-git
+	pkgdesc = Qt-based IRC client (monolithic version)
+	depends = hicolor-icon-theme
+	depends = qt5-base
+
+pkgname = quassel-client-git
+	pkgdesc = KDE-based distributed IRC client (client only)
+	depends = hicolor-icon-theme
+	depends = knotifyconfig
+	depends = qt5-base
+	depends = qt5-webkit
+	provides = quassel-client
+	conflicts = quassel-client
+
+pkgname = quassel-client-light-git
+	pkgdesc = Qt-based distributed IRC client (client only)
+	depends = hicolor-icon-theme
+	depends = qt5-base
+	provides = quassel-client
+	conflicts = quassel-client
+
+pkgname = quassel-core-git
+	pkgdesc = KDE/Qt-based distributed IRC client (core only)
+	depends = icu
+	depends = qca
+	depends = qt5-script
+	provides = quassel-core
+	conflicts = quassel-core
