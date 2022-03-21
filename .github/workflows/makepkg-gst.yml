@@ -1,0 +1,118 @@
+name: makepkg-gst
+
+on:
+  # Allow manual start
+  workflow_dispatch:
+  # Run job on 00:00UTC daily
+  schedule:
+  - cron: "0 */4 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    concurrency:
+      group:  ${{ github.workflow }}-${{ github.ref }}
+    environment: buildpkg
+    container:
+      image: ghcr.io/greyltc/archlinux:latest
+      options: -u root
+    steps:
+    - name: Install workflow dependencies
+      run: pacman -Sy nodejs patch git --overwrite="*" --noprogressbar --noconfirm --needed
+
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Prepare build user
+      run: . ./.helpers/init/useradd
+
+    - name: Prepare build environment
+      run: su user -c ./.helpers/init/prepare-docker
+      env:
+        GPG_KEY: ${{ secrets.GPG_KEY }}
+        REPO:    ahm-aur
+
+    - name: Prepare pacman-keyrings
+      run: . ./.helpers/init/keyring
+
+    - name: Add local mirrors
+      if: ${{ env.ACT }}
+      run: . ./.helpers/act/mirrorlist
+
+    - name: Update pacman-mirrors
+      run: . ./.helpers/init/mirrorlist
+
+    - name: Update build environment
+      run: . ./.helpers/init/pacman-syu
+
+    - name: Fetch package signatures
+      run: ./.helpers/maint/rsync fetch
+      env:
+        RUSER: ${{ secrets.REPO_USER }}
+        RHOST: ${{ secrets.REPO_HOST }}
+        RSMOD: pacman-gst
+        RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
+
+    - name: Init cache
+      if: ${{ !env.ACT }}
+      uses: actions/cache@v2
+      with:
+        key: gst-makepkg-${{ hashFiles('./.pkgs/repo/*.sig') }}
+        path: ./.pkgs/repo
+        restore-keys: gst-makepkg-
+
+    - name: Pull remote
+      run: ./.helpers/maint/rsync pull
+      env:
+        RUSER: ${{ secrets.REPO_USER }}
+        RHOST: ${{ secrets.REPO_HOST }}
+        RSMOD: pacman-gst
+        RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
+    - name: Fetch Package snapshots
+      run: |
+        for each in $PKGS;do
+          curl -s https://aur.archlinux.org/cgit/aur.git/snapshot/$each.tar.gz \
+          | bsdtar -xvf -
+        done
+        for each in $PATCHES;do
+          curl -s "$each" | patch -p1 || :
+        done
+      env:
+        PKGS: |
+          lib32-gst-plugins-ugly
+          lib32-gst-plugins-bad
+        PATCHES: |
+          http://ix.io/3T3L
+          http://ix.io/3T3M
+
+    - name: Build packages
+      run: |
+        su user -c ./.helpers/build-all \
+          ahmubashshir-keyring \
+          lib32-gst-plugins-ugly \
+          lib32-gst-plugins-bad
+
+    - name: Prune packages
+      run: su user -c ./.helpers/maint/prune-pkg
+      env:
+        REPO: ahm-aur
+
+    - name: Push remote
+      run: ./.helpers/maint/rsync push
+      env:
+        RUSER: ${{ secrets.REPO_USER }}
+        RHOST: ${{ secrets.REPO_HOST }}
+        RSMOD: pacman-gst
+        RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
+
+    - name: Upload logs
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: log
+        path: ./.pkgs/logs
+        if-no-files-found: warn
+        retention-days: 4
+# vim: ft=yaml:ts=2:et:
