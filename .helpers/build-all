@@ -11,8 +11,11 @@ source "$helpers/util.sh"
 cd "$base" || exit 1
 
 truncate -s 0 pkgs.txt ipc
+if [[ $# -eq 0 ]]; then
+	set -- */
+fi
 
-for each in */; do
+for each in "$@"; do
 	unset pkgs pkgbase
 	truncate -s 0 ipc
 
