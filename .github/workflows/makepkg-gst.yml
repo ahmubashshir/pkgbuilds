@@ -80,18 +80,19 @@ jobs:
           curl -s "$each" | patch -p1 || :
         done
       env:
-        PKGS: |
+        PKGS: >-
           lib32-gst-plugins-ugly
           lib32-gst-plugins-bad
-        PATCHES: |
+        PATCHES: >-
           http://ix.io/3T3L
           http://ix.io/3T3M
 
     - name: Build packages
-      run: |
-        su user -c ./.helpers/build-all \
-          ahmubashshir-keyring \
-          lib32-gst-plugins-ugly \
+      run: su user -c "./.helpers/build-all $PKGS"
+      env:
+        PKGS: >-
+          ahmubashshir-keyring
+          lib32-gst-plugins-ugly
           lib32-gst-plugins-bad
 
     - name: Prune packages
