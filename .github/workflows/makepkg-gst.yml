@@ -81,9 +81,11 @@ jobs:
         done
       env:
         PKGS: >-
+          lib32-ffmpeg
           lib32-gst-plugins-ugly
           lib32-gst-plugins-bad
         PATCHES: >-
+          http://ix.io/3T4s
           http://ix.io/3T3L
           http://ix.io/3T3M
 
