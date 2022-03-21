@@ -32,7 +32,7 @@ jobs:
       run: su user -c ./.helpers/init/prepare-docker
       env:
         GPG_KEY: ${{ secrets.GPG_KEY }}
-        REPO:    ahm-aur
+        REPO:    ahm-aur-gst
 
     - name: Prepare pacman-keyrings
       run: . ./.helpers/init/keyring
@@ -98,7 +98,7 @@ jobs:
     - name: Prune packages
       run: su user -c ./.helpers/maint/prune-pkg
       env:
-        REPO: ahm-aur
+        REPO: ahm-aur-gst
 
     - name: Push remote
       run: ./.helpers/maint/rsync push
