@@ -4,6 +4,7 @@ source "${0%/*}/../util.sh"
 ret=0
 if [[ $1 == --clean ]]; then
 	yay -Yc --color always --nosave --noprogressbar --noconfirm
+	rm -f ~/.config/yay/config.json
 else
 	deps()
 	{
@@ -11,6 +12,12 @@ else
 	}
 	helpers=$(realpath "${0%/*}/..")
 	source ./PKGBUILD
+
+	cat > ~/.config/yay/config.json << EOF
+{
+"buildDir": "$(realpath "${0%/*}/../..")/.pkgs/yay/${pkgbase:-$pkgname}"
+}
+EOF
 
 	if ((${#depends[@]} > 0)); then
 		printf "${BOLD}"
@@ -33,7 +40,7 @@ else
 	fi >&2
 
 	((${#depends[@]} == 0)) || deps "${depends[@]}" \
-		--makepkg    "$helpers/build" --makepkgconf ~/makepkg.conf
+		--makepkg  "$helpers/build" --makepkgconf ~/makepkg.conf
 	((ret += $?))
 	((${#makedepends[@]} == 0)) || deps "${makedepends[@]}"
 	((ret += $?))
