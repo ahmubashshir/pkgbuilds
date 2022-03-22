@@ -57,7 +57,7 @@ jobs:
 
     - name: Init cache
       if: ${{ !env.ACT }}
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         key: makepkg-${{ hashFiles('./.pkgs/repo/*.sig') }}
         path: ./.pkgs/repo
