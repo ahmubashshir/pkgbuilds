@@ -20,6 +20,9 @@ jobs:
     - name: Install dependencies
       run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh
 
+    - name: Mark workdir as safe
+      run: git config --global --add safe.directory $PWD
+
     - name: Checkout
       uses: actions/checkout@v3
       with:
