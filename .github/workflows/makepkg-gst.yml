@@ -91,8 +91,6 @@ jobs:
         PATCHES: >-
           http://ix.io/3T4I
           http://ix.io/3T5t
-          http://ix.io/3T8E
-          http://ix.io/3T8x
 
     - name: Build packages
       run: su user -c "./.helpers/build-all $PKGS"
