@@ -16,7 +16,7 @@ else
 	cat > ~/.config/yay/config.json << EOF
 {
 "buildDir": "$(realpath "${0%/*}/../..")/.pkgs/yay/${pkgbase:-$pkgname}",
-"pgpfetch": true
+"mflags": "--skippgpcheck"
 }
 EOF
 
