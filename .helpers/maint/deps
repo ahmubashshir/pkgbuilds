@@ -15,7 +15,8 @@ else
 
 	cat > ~/.config/yay/config.json << EOF
 {
-"buildDir": "$(realpath "${0%/*}/../..")/.pkgs/yay/${pkgbase:-$pkgname}"
+"buildDir": "$(realpath "${0%/*}/../..")/.pkgs/yay/${pkgbase:-$pkgname}",
+"pgpfetch": true
 }
 EOF
 
@@ -40,7 +41,7 @@ EOF
 	fi >&2
 
 	((${#depends[@]} == 0)) || deps "${depends[@]}" \
-		--makepkg  "$helpers/build" --makepkgconf ~/makepkg.conf
+		--makepkg "$helpers/build" --makepkgconf ~/makepkg.conf
 	((ret += $?))
 	((${#makedepends[@]} == 0)) || deps "${makedepends[@]}"
 	((ret += $?))
