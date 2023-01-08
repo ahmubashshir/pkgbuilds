@@ -75,19 +75,23 @@ jobs:
         RSYNC_PASSWORD: ${{ secrets.REPO_PASS }}
     - name: Fetch Package snapshots
       run: |
-        for each in $PKGS;do
-          curl -s https://aur.archlinux.org/cgit/aur.git/snapshot/$each.tar.gz \
-          | su user -c 'bsdtar -xvf -'
-        done
-        for each in $PATCHES;do
-          curl -s "$each" | su user -c 'patch -p1' || :
-        done
+        cp -rv lib32-gst-bad-ugly lib32-gst-plugins
+        if [ -n "$PKGS" ];then
+          for each in $PKGS;do
+            curl -s https://aur.archlinux.org/cgit/aur.git/snapshot/$each.tar.gz \
+            | su user -c "bsdtar -xvf -"
+          done
+        fi
+        if [ -n "$PATCHES" ]; then
+          for each in $PATCHES;do
+            curl -s "$each" | su user -c 'patch -p1' || :
+          done
+        fi
+
       env:
         PKGS: >-
-          lib32-ffmpeg
           lib32-libdc1394
-          lib32-gst-plugins-bad
-          lib32-gst-plugins-ugly
+          lib32-ffmpeg
         PATCHES: >-
           http://ix.io/3T4I
           http://ix.io/3T5t
@@ -97,8 +101,7 @@ jobs:
       env:
         PKGS: >-
           ahmubashshir-keyring
-          lib32-gst-plugins-bad
-          lib32-gst-plugins-ugly
+          lib32-gst-plugins
 
     - name: Prune packages
       run: su user -c ./.helpers/maint/prune-pkg
