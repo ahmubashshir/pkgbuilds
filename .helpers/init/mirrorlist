@@ -2,11 +2,24 @@
 pacman -Sy --needed --noprogressbar --noconfirm rsync reflector repose sudo
 
 if [ ! -f /usr/bin/yay ]; then
-	curl -sH "Accept: application/vnd.github.v3+json" \
-		"https://api.github.com/repos/Jguer/yay/releases/latest" |
-		sed -nE '/browser_download_url/{/[xX]86_64/s/^.*: "(.*)".*$/\1/p}' |
+	set -e
+	(
+		until [ "$release" ] || [ "${try:-0}" -gt 5 ]; do
+			release=$(curl -sH "Accept: application/vnd.github.v3+json" \
+				"https://api.github.com/repos/Jguer/yay/releases/latest" |
+				sed -nE '/browser_download_url/{/[xX]86_64/s/^.*: "(.*)".*$/\1/p}')
+			sleep 1
+			: $((try++))
+		done
+		if [ "$release" ]; then
+			echo "$release"
+		else
+			exit 1
+		fi
+	) |
 		xargs curl -sL |
 		bsdtar --strip-components 1 -xf - -C /usr/bin '*/yay'
+	set +e
 fi
 
 if [ ! -f /tmp/.mirrorlist ]; then
