@@ -1,8 +1,0 @@
-*
-!.gitignore
-!PKGBUILD
-!.SRCINFO
-!update-notifier.hook
-!update-notifier.service
-!update-notifier.timer
-!update-notifier.install

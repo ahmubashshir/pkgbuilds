@@ -1,8 +1,0 @@
-[Unit]
-Description=Update notifier service
-
-[Service]
-ExecStart=/usr/bin/update-notifier -systemd
-
-[Install]
-WantedBy=update-notifier.timer
