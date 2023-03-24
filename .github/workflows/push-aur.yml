@@ -54,7 +54,7 @@ jobs:
         git log --format=oneline \
         | grep -E '[a-z0-9]{40}\s\w+\s'\''[[:alnum:]-]+/'\''\s\w+\scommit\s'\''[a-z0-9]{40}'\''$' \
         | awk '{print $1}' | sha1sum \
-        | awk '{print "::set-output name=hash::"$1}'
+        | awk '{print "hash="$1 >> ENVIRON["GITHUB_OUTPUT"] }'
 
     - name: Init subtree cache
       uses: actions/cache@v3
