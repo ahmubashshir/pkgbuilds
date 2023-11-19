@@ -1,7 +1,7 @@
 pkgbase = ahmubashshir-keyring
 	pkgdesc = @ahmubashshir's keyring
 	pkgver = 2
-	pkgrel = 4
+	pkgrel = 6
 	url = https://ahmubashshir.github.io
 	install = ahmubashshir-keyring.install
 	arch = any

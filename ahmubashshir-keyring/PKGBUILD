@@ -3,7 +3,7 @@
 
 pkgname='ahmubashshir-keyring'
 pkgver='2'
-pkgrel=4
+pkgrel=6
 pkgdesc="@ahmubashshir's keyring"
 arch=('any')
 url='https://ahmubashshir.github.io'
