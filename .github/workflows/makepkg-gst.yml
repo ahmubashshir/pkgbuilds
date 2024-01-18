@@ -60,7 +60,7 @@ jobs:
 
     - name: Init cache
       if: ${{ !env.ACT }}
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: gst-makepkg-${{ hashFiles('./.pkgs/repo/*.sig') }}
         path: ./.pkgs/repo
