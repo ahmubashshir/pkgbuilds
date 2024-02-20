@@ -18,7 +18,7 @@ jobs:
       image: ghcr.io/greyltc/archlinux:latest
     steps:
     - name: Install dependencies
-      run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh
+      run: pacman -Syu --overwrite="*" --needed --noconfirm --noprogressbar git openssh nodejs
 
     - name: Mark workdir as safe
       run: git config --global --add safe.directory $PWD
@@ -35,16 +35,10 @@ jobs:
         cd /root/.ssh
 
         printf "${{ secrets.SSH_KEY }}\n" > id_rsa
-        chmod 400 id_rsa
+        chmod 600 id_rsa
 
         ssh-keyscan aur.archlinux.org > known_hosts
-        chmod 644 known_hosts
-
-        cat > config <<EOF
-        Host aur aur.archlinux.org
-          User aur
-          HostName aur.archlinux.org
-        EOF
+        chmod 600 known_hosts
     - name: Setup aurpublish
       run: ./.helpers/aur/pub setup
 
@@ -65,7 +59,7 @@ jobs:
 
     - name: Publish pkgbuilds
       shell: bash
-      if: ${{ !env.ACT }}
+      if: ${{ ! env.ACT || env.FORCE_ACT }}
       run: |
         git reset --hard
         git config user.email "ahmubashshir@gmail.com"
@@ -79,8 +73,7 @@ jobs:
             source "$each/PKGBUILD"
             printf '::group::Publish %s\n' "${pkgbase:-$pkgname}"
           )
-          ./.helpers/aur/pub -p "$each"
-          ./.helpers/aur/pub    "$each"
+          (./.helpers/aur/pub -p "$each";./.helpers/aur/pub    "$each") || true
           printf '::endgroup::\n'
         done
 
