@@ -1,0 +1,5 @@
+*
+!.SRCINFO
+!PKGBUILD
+!cookie.patch
+!.gitignore
