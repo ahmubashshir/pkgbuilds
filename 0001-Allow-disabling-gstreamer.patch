@@ -1,38 +1,33 @@
 diff --git a/meson.build b/meson.build
-index 1c33e18084..8612d88e04 100644
+index db32a57fba..67a208d517 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -85,7 +85,7 @@ endif
+@@ -105,7 +105,7 @@ gst_python_option = get_option('python').disable_if(get_option('introspection').
  
  # Ordered list of subprojects (dict has no ordering guarantees)
  subprojects = [
--  ['gstreamer', {'build-hotdoc': true, 'subproject_options': tools_option}],
-+  ['gstreamer', {'option': get_option('gstreamer'), 'build-hotdoc': true, 'subproject_options': tools_option}],
+-  ['gstreamer', {'build-hotdoc': true, 'subproject_options': building_full_options}],
++  ['gstreamer', {'option': get_option('gstreamer'), 'build-hotdoc': true, 'subproject_options': building_full_options}],
    ['gst-plugins-base', {'option': get_option('base'), 'build-hotdoc': true}],
    ['gst-plugins-good', {'option': get_option('good'), 'build-hotdoc': true}],
-   ['libnice', { 'option': get_option('libnice'), 'match_gst_version': false}],
-diff --git a/meson_options.txt b/meson_options.txt
-index 49c20a0705..66ff309b1f 100644
---- a/meson_options.txt
-+++ b/meson_options.txt
-@@ -3,6 +3,7 @@ option('python', type : 'feature', value : 'auto')
- option('libav', type : 'feature', value : 'auto')
- option('libnice', type : 'feature', value : 'auto')
- option('base', type : 'feature', value : 'enabled')
-+option('gstreamer', type : 'feature', value : 'enabled')
- option('good', type : 'feature', value : 'enabled')
- option('ugly', type : 'feature', value : 'auto')
- option('bad', type : 'feature', value : 'auto')
-diff --git a/meson.build b/meson.build
-index 8612d88e04..7fa8b5724d 100644
---- a/meson.build
-+++ b/meson.build
-@@ -162,7 +162,7 @@ foreach sp : subprojects
+   ['libnice', { 'option': get_option('libnice'), 'match_gst_version': false, 'subproject_options': libnice_options}],
+@@ -192,7 +192,7 @@ foreach sp : subprojects
      subproj = subproject(project_name, required: is_required, default_options: default_options)
    endif
  
--  if project_name == 'gst-plugins-base'
-+  if project_name == 'gst-plugins-base' and not is_required.disabled()
+-  if project_name == 'gst-plugins-base' and subproj.found()
++  if project_name == 'gst-plugins-base' and subproj.found() and not is_required.disabled()
      gst_base_orc_req = subproj.get_variable('orc_req', '')
      if gst_base_orc_req != orc_req
        error('orc_req is "@0@" but it should be "@1@" from subprojects/gst-plugins-base/meson.build'
+diff --git a/meson_options.txt b/meson_options.txt
+index 91b1449f18..39152be149 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,5 +1,6 @@
+ # GStreamer subprojects
+ option('base', type : 'feature', value : 'enabled')
++option('gstreamer', type : 'feature', value : 'enabled')
+ option('good', type : 'feature', value : 'enabled')
+ option('ugly', type : 'feature', value : 'enabled')
+ option('bad', type : 'feature', value : 'enabled')
