@@ -9,16 +9,17 @@
 # match! -rc[0-9]+$
 
 pkgname=libvirt
-pkgver=10.1.0
-pkgrel=3
+pkgver=10.2.0
+pkgrel=1
 pkgdesc="API for controlling virtualization engines (openvz,kvm,qemu,virtualbox,xen,etc)"
 arch=('x86_64')
 url="https://libvirt.org/"
-license=('LGPL' 'GPL3') #libvirt_parthelper links to libparted which is GPL3 only
+license=('LGPL-2.1-or-later'
+         'GPL-3.0-or-later') # libvirt_parthelper links to libparted
 depends=('libpciaccess' 'yajl' 'fuse3' 'gnutls' 'parted' 'libssh' 'libxml2'
-         'numactl' 'polkit' 'libnbd')
+         'numactl' 'polkit' 'libnbd' 'libnl')
 makedepends=('meson' 'libxslt' 'python-docutils' 'lvm2' 'open-iscsi' 'libiscsi' 'glusterfs'
-             'bash-completion' 'rpcsvc-proto' 'dnsmasq' 'iproute2' 'qemu-base')
+             'bash-completion' 'dnsmasq' 'iproute2' 'qemu-base')
 optdepends=('libvirt-storage-gluster: Gluster storage backend'
             'libvirt-storage-iscsi-direct: iSCSI-direct storage backend'
             'gettext: required for libvirt-guests.service'
@@ -87,7 +88,7 @@ backup=(
 source=(
   "https://libvirt.org/sources/$pkgname-$pkgver.tar.xz"{,.asc}
 )
-sha256sums=('36d9077e2b0ef6b0c6df3b42e42a67411b6ce3b1564b427b55e65019dde60eed'
+sha256sums=('215772bc5dc4a672e67ffa9de3774f05ed4b7ed282dbe296ec5c9fec01dd7ae3'
             'SKIP')
 validpgpkeys=('453B65310595562855471199CA68BE8010084C9C') # Jiří Denemark <jdenemar@redhat.com>
 
@@ -140,27 +141,24 @@ build() {
     -Dstorage_zfs=enabled\
     -Dstorage_rbd=disabled
 
-  ninja -C build
+  meson compile -C build
 }
 
 check() {
-  ninja -C build test
+  meson test -C build --print-errorlogs
 }
 
 package() {
   conflicts=('libvirt')
   provides=("libvirt=$pkgver" 'libvirt.so' 'libvirt-admin.so' 'libvirt-lxc.so' 'libvirt-qemu.so')
-  provides+=('libvirt-libxl.so')
 
-  DESTDIR="$pkgdir" ninja -C build install
-  mkdir "$pkgdir"/usr/lib/{sysusers,tmpfiles}.d
-  echo 'g libvirt - -' > "$pkgdir/usr/lib/sysusers.d/libvirt.conf"
+  meson install -C build --destdir "$pkgdir"
+  mkdir -p "$pkgdir"/usr/lib/{sysusers,tmpfiles}.d
+  echo 'g libvirt - -' > "$pkgdir/usr/lib/sysusers.d/libvirt-qemu.conf"
   echo 'u libvirt-qemu /var/lib/libvirt "Libvirt QEMU user"' >> "$pkgdir/usr/lib/sysusers.d/libvirt.conf"
   echo 'm libvirt-qemu kvm' >> "$pkgdir/usr/lib/sysusers.d/libvirt.conf"
   echo 'z /var/lib/libvirt/qemu 0751' > "$pkgdir/usr/lib/tmpfiles.d/libvirt.conf"
 
-  chown 0:102 "$pkgdir/usr/share/polkit-1/rules.d"
-  chmod 0750 "$pkgdir/usr/share/polkit-1/rules.d"
   chmod 600 "$pkgdir"/etc/libvirt/nwfilter/*.xml \
     "$pkgdir/etc/libvirt/qemu/networks/default.xml"
   chmod 700 "$pkgdir"/etc/libvirt/secrets
