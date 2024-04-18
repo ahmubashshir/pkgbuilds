@@ -25,9 +25,8 @@ _libav_depends=(lib32-ffmpeg)
 _common_depends=("lib32-gst-plugins-base-libs>=$pkgver")
 _bad_libs_depends=(
 	lib32-libdrm		lib32-libgudev
-	lib32-libusb		lib32-libva
+	lib32-libusb		lib32-orc
 	lib32-libx11		lib32-libxkbcommon-x11
-	lib32-orc
 )
 
 _ugly_depends=(
@@ -45,7 +44,6 @@ _bad_depends=(
 	lib32-libdc1394		lib32-libdca
 	lib32-libde265		lib32-libdvdnav
 	lib32-libdvdread	lib32-libfdk-aac
-	lib32-libgme		lib32-libkate
 	lib32-liblrdf		lib32-libmodplug
 	lib32-libmpcdec		lib32-librsvg
 	lib32-libsndfile	lib32-libsrtp
@@ -59,12 +57,13 @@ _bad_depends=(
 	lib32-vulkan-icd-loader	lib32-wayland
 	lib32-wildmidi		lib32-x265
 	lib32-zvbi		libltc
+	lib32-libgme
 )
 
 makedepends=(
 	# superproject
 	git meson lib32-gstreamer lib32-gst-plugins-{base,good} wayland-protocols
-	lib32-gtk3
+	lib32-gtk3 python-packaging
 
 	# _common
 	"${_common_depends[@]}"
@@ -92,14 +91,14 @@ makedepends=(
 checkdepends=(xorg-server-xvfb)
 options=(!debug)
 source=(
-	"git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git?signed#tag=$pkgver"
+	"git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=$pkgver"
 	0001-Allow-disabling-gstreamer.patch
 	0002-HACK-meson-Disable-broken-tests.patch
 )
 sha256sums=('SKIP'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
-            '951edc965cce062b3a08048297c9d66ff264eed5d8e884170706e4854c9f92df')
-validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
+            '3ff4e16e0d64ca935fbcc1ee5338ac815a8682878c2da78b9d0166037949e54e')
+#validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
 pkgver() {
 	cd gstreamer
@@ -147,8 +146,10 @@ build() {
 		-D gpl=enabled
 		-D gst-examples=disabled
 		-D introspection=disabled
+		-D qt6=disabled
+		-D webrtc=disabled
 		-D libnice=disabled
-		-D omx=disabled
+#		-D omx=disabled
 		-D orc-source=system
 		-D package-origin="https://www.archlinux.org/"
 
@@ -171,6 +172,7 @@ build() {
 		-D ugly=enabled
 		-D "bad=${meson_switches[LIB32GST_DISABLE_BAD]}"
 		# subprojects
+		-D gst-plugins-bad:mfx_api=oneVPL
 		-D gst-plugins-bad:directfb=disabled
 		-D gst-plugins-bad:directshow=disabled
 		-D gst-plugins-bad:directsound=disabled
@@ -198,6 +200,8 @@ build() {
 		-D gst-plugins-bad:mplex=disabled
 		-D gst-plugins-bad:webrtc=disabled
 		-D gst-plugins-bad:webrtcdsp=disabled
+		-D gst-plugins-bad:aja=disabled
+		-D gst-plugins-bad:qt6d3d11=disabled
 		# -- end -- -D gst-plugins-bad:=disabled
 		-D gst-plugins-bad:opencv=disabled # due to no lib32-opencv
 		-D gst-plugins-bad:msdk=disabled # due to no msdk (32-bit) support
@@ -209,8 +213,10 @@ build() {
 		-D gst-plugins-bad:openmpt=disabled # due to no lib32-openmpt support
 		-D gst-plugins-bad:qroverlay=disabled # due to no lib32-qrencode support
 		-D gst-plugins-bad:svthevcenc=disabled # due to no lib32-svthevcenc support
-	#	-D gst-plugins-bad:svtav1=disabled # due to no lib32-svt-av1
+		-D gst-plugins-bad:svtav1=disabled # due to no lib32-svt-av1
 		-D gst-plugins-bad:wpe=disabled # due to no lib32-wpe support
+		-D gst-plugins-bad:lc3=disabled # no lib32 support
+		-D gst-plugins-bad:va=disabled  # linker error
 		-D gst-plugins-bad:zxing=disabled # due to no lib32-zxing support
 		-D gst-plugins-bad:amfcodec=disabled # only support windows
 		-D gst-plugins-ugly:sidplay=disabled
@@ -276,7 +282,7 @@ package_lib32-gst-plugins-bad-libs() {
 	closedcaption colormanagement
 	curl dash dc1394 de265 dtls dtsdec
 	faac faad fdkaac fluidsynthmidi
-	gme hls kate ladspa lv2 modplug
+	gme hls ladspa lv2 modplug
 	musepack neonhttpsrc
 	openal opusparse resindvd
 	rsvg rtmp sbc sctp smoothstreaming
