@@ -4,7 +4,7 @@
 # match! alpha[0-9]*$
 
 pkgname=gedit-menubar
-pkgver=46.2
+pkgver=47.0
 pkgrel=1
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
@@ -16,7 +16,7 @@ depends=(
 	libgedit-amtk
 	libpeas
 	python-gobject
-	tepl
+	libgedit-tepl
 )
 makedepends=(
 	appstream-glib
@@ -36,9 +36,9 @@ groups=(gnome-extra)
 source=("git+https://gitlab.gnome.org/GNOME/gedit.git#tag=$pkgver"
         "git+https://gitlab.gnome.org/GNOME/libgd.git"
         "menubar.patch")
-sha256sums=('SKIP'
+sha256sums=('fe9f6e5acb3a6dff0c8d6ea150eb85b3923e05acb4ce10c4b3e65c04f049895a'
             'SKIP'
-            'a711518646e2d0727927ea88d59010ece1611f1e00436a7276f934a628491c6a')
+            '80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163')
 
 pkgver() {
   git -C ${pkgname%-*} describe --tags | sed 's/-/+/g'

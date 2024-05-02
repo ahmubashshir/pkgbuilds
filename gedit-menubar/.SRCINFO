@@ -1,6 +1,6 @@
 pkgbase = gedit-menubar
 	pkgdesc = GNOME Text Editor (Patched to show menubar)
-	pkgver = 46.2
+	pkgver = 47.0
 	pkgrel = 1
 	url = https://wiki.gnome.org/Apps/Gedit
 	arch = x86_64
@@ -19,16 +19,16 @@ pkgbase = gedit-menubar
 	depends = libgedit-amtk
 	depends = libpeas
 	depends = python-gobject
-	depends = tepl
+	depends = libgedit-tepl
 	optdepends = gedit-plugins: Additional features
 	provides = gedit
 	conflicts = gedit-code-assistance<=3.16.0+4+gd19b879-1
 	conflicts = gedit
-	source = git+https://gitlab.gnome.org/GNOME/gedit.git#tag=46.2
+	source = git+https://gitlab.gnome.org/GNOME/gedit.git#tag=47.0
 	source = git+https://gitlab.gnome.org/GNOME/libgd.git
 	source = menubar.patch
+	sha256sums = fe9f6e5acb3a6dff0c8d6ea150eb85b3923e05acb4ce10c4b3e65c04f049895a
 	sha256sums = SKIP
-	sha256sums = SKIP
-	sha256sums = a711518646e2d0727927ea88d59010ece1611f1e00436a7276f934a628491c6a
+	sha256sums = 80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163
 
 pkgname = gedit-menubar
