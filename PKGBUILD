@@ -9,7 +9,7 @@ pkgrel=1
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
-license=(GPL)
+license=('GPL-2.0-or-later')
 depends=(
 	gsettings-desktop-schemas
 	gspell
