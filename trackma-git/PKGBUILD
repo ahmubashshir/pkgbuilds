@@ -4,7 +4,7 @@
 # from: git
 
 pkgname=trackma-git
-pkgver=0.8.6.r35.ge6b4745
+pkgver=0.8.6.r52.g514d37e
 pkgrel=1
 pkgdesc="A lightweight and simple program for updating and using lists on several media tracking websites."
 arch=('any')
@@ -24,7 +24,7 @@ makedepends=(
 optdepends=('python-cairo:   GTK frontend'
     'python-gobject: GTK frontend/MPRIS tracker'
     'python-pillow:  thumbnail images for GUI frontends'
-    'python-pydbus:  MPRIS tracker'
+    'python-jeepney:  MPRIS tracker'
     'python-pyqt5:   Qt frontend'
     'python-urwid:   ncurses frontend'
     'lsof:           polling tracker/pyinotify alternative')
@@ -44,7 +44,6 @@ sha256sums=('SKIP'
 #old package name.
 conflicts=('wmal-git' 'trackma')
 provides=('trackma')
-replaces=('wmal-git')
 
 pkgver() {
   cd ${pkgname}
