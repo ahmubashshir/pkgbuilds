@@ -15,8 +15,8 @@ pkgname=(lib32-gst-plugins-ugly)
 )
 readonly LIB32GST_DISABLE_{AV,BAD}
 
-pkgver=1.24.0
-pkgrel=2
+pkgver=1.24.3
+pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -97,7 +97,7 @@ source=(
 )
 sha256sums=('SKIP'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
-            '3ff4e16e0d64ca935fbcc1ee5338ac815a8682878c2da78b9d0166037949e54e')
+            '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
 pkgver() {
@@ -230,6 +230,8 @@ build() {
 check() (
 	export XDG_RUNTIME_DIR="$PWD/runtime-dir"
 	mkdir -p -m 700 "$XDG_RUNTIME_DIR"
+
+	export NO_AT_BRIDGE=1 GTK_A11Y=none
 
 	# Flaky due to timeouts
 	xvfb-run -s '-nolisten local' \
