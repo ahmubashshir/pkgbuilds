@@ -1,7 +1,7 @@
 pkgbase = whatpulse
 	pkgdesc = Measures your keyboard, mouse and application usage, network traffic and uptime.
 	pkgver = 5.7
-	pkgrel = 1
+	pkgrel = 2
 	url = http://www.whatpulse.org
 	arch = x86_64
 	license = custom:whatpulse_tos
@@ -34,6 +34,6 @@ pkgbase = whatpulse
 	sha256sums = f3d16ee6e325a3c657e7af1ebc9f6e35d09ff5c03b0a8b0450611e610c5d6d32
 	sha256sums = cfea47f15bb3ba2494a7b1d50367139dc12709fc1e8ba0b25d86ee5f09748619
 	source_x86_64 = whatpulse-5.7-amd64.AppImage::https://releases-dev.whatpulse.org/5.7/linux/whatpulse-linux-5.7_amd64.AppImage
-	sha256sums_x86_64 = da946a823976b9c1fc8558b3d94a6b9975de803345840c04720e91463246c085
+	sha256sums_x86_64 = 50f74bd6c76d13a7b33cf015f943c8cc1d4109c35c02de3aa7a2b54910b204f8
 
 pkgname = whatpulse

@@ -7,7 +7,7 @@
 
 pkgname=whatpulse
 pkgver=5.7
-pkgrel=1
+pkgrel=2
 
 pkgdesc="Measures your keyboard, mouse and application usage, network traffic and uptime."
 arch=('x86_64')
@@ -38,7 +38,7 @@ source_x86_64=("${pkgname}-${pkgver}-amd64.AppImage::https://releases-dev.whatpu
 sha256sums=('5a4a6676a6b513824eeac8a2accd6de9e8bd2bc11b3e2967fa2b2a18d29fa35d'
             'f3d16ee6e325a3c657e7af1ebc9f6e35d09ff5c03b0a8b0450611e610c5d6d32'
             'cfea47f15bb3ba2494a7b1d50367139dc12709fc1e8ba0b25d86ee5f09748619')
-sha256sums_x86_64=('da946a823976b9c1fc8558b3d94a6b9975de803345840c04720e91463246c085')
+sha256sums_x86_64=('50f74bd6c76d13a7b33cf015f943c8cc1d4109c35c02de3aa7a2b54910b204f8')
 
 _extract() {
 	./"${pkgname}-${pkgver}-amd64.AppImage" --appimage-extract "$1"
