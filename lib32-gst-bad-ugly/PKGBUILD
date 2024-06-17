@@ -16,7 +16,7 @@ pkgname=(lib32-gst-plugins-ugly)
 readonly LIB32GST_DISABLE_{AV,BAD}
 
 pkgver=1.24.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -63,7 +63,7 @@ _bad_depends=(
 makedepends=(
 	# superproject
 	git meson lib32-gstreamer lib32-gst-plugins-{base,good} wayland-protocols
-	lib32-gtk3 python-packaging
+	lib32-gtk3 python-packaging glib2-devel
 
 	# _common
 	"${_common_depends[@]}"
