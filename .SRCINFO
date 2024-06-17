@@ -1,7 +1,7 @@
 pkgbase = lib32-gst-bad-ugly
 	pkgdesc = Multimedia graph framework (32-bit)
 	pkgver = 1.24.3
-	pkgrel = 1
+	pkgrel = 2
 	url = https://gstreamer.freedesktop.org/
 	arch = x86_64
 	license = LGPL
@@ -14,6 +14,7 @@ pkgbase = lib32-gst-bad-ugly
 	makedepends = wayland-protocols
 	makedepends = lib32-gtk3
 	makedepends = python-packaging
+	makedepends = glib2-devel
 	makedepends = lib32-gst-plugins-base-libs>=1.24.3
 	makedepends = lib32-a52dec
 	makedepends = lib32-libcdio
