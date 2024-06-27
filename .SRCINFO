@@ -83,9 +83,11 @@ pkgbase = lib32-gst-bad-ugly
 	source = git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=1.24.3
 	source = 0001-Allow-disabling-gstreamer.patch
 	source = 0002-HACK-meson-Disable-broken-tests.patch
+	source = 0003-mr6505.diff::https://github.com/OpenMandrivaAssociation/gst-libav/raw/master/6505.diff
 	sha256sums = SKIP
 	sha256sums = dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50
 	sha256sums = 405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda
+	sha256sums = 0a8488ee58f22edd0d5d158c2b2347c0ddeb9f8112c903bac2bb36bed107d783
 
 pkgname = lib32-gst-plugins-ugly
 	pkgdesc = Multimedia graph framework (32-bit) - ugly plugins
