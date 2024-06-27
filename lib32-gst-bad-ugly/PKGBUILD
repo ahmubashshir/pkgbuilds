@@ -100,6 +100,9 @@ sha256sums=('SKIP'
             '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
+source+=('0003-mr6505.diff::https://github.com/OpenMandrivaAssociation/gst-libav/raw/master/6505.diff')
+sha256sums+=('0a8488ee58f22edd0d5d158c2b2347c0ddeb9f8112c903bac2bb36bed107d783')
+
 pkgver() {
 	cd gstreamer
 	git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
@@ -113,6 +116,9 @@ prepare() {
 
 	# Disable broken tests
 	git apply -3 ../0002-HACK-meson-Disable-broken-tests.patch
+
+	# libav: Fix compatibility with ffmpeg 7
+	patch -d subprojects -p0 -i "$srcdir"/0003-mr6505.diff
 }
 
 _fix_pkgconf() {
