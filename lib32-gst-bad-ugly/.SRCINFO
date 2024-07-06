@@ -1,7 +1,7 @@
 pkgbase = lib32-gst-bad-ugly
 	pkgdesc = Multimedia graph framework (32-bit)
 	pkgver = 1.24.3
-	pkgrel = 2
+	pkgrel = 3
 	url = https://gstreamer.freedesktop.org/
 	arch = x86_64
 	license = LGPL
@@ -82,12 +82,12 @@ pkgbase = lib32-gst-bad-ugly
 	options = !debug
 	source = git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=1.24.3
 	source = 0001-Allow-disabling-gstreamer.patch
-	source = 0002-HACK-meson-Disable-broken-tests.patch
-	source = 0003-mr6505.diff::https://github.com/OpenMandrivaAssociation/gst-libav/raw/master/6505.diff
-	sha256sums = SKIP
+	source = 0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/1.24.3-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags
+	source = 0003-libav-Fix-compatibility-with-ffmpeg-7.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/main/0002-libav-Fix-compatibility-with-ffmpeg-7.patch
+	sha256sums = 8d8f5077c4e3aa61031bca0991d43c4bef5fe789456a6b8ba159b2c9f634fe0c
 	sha256sums = dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50
 	sha256sums = 405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda
-	sha256sums = 0a8488ee58f22edd0d5d158c2b2347c0ddeb9f8112c903bac2bb36bed107d783
+	sha256sums = c61f2bc7ce473fd4956bdd7d22294b700b7fff6915df7155bb6ca4604ac7c421
 
 pkgname = lib32-gst-plugins-ugly
 	pkgdesc = Multimedia graph framework (32-bit) - ugly plugins
