@@ -1,3 +1,5 @@
+# from: gitlab gitlab.freedesktop.org
+# what: gstreamer/gstreamer
 # Maintainer: Mubashshir <ahmubashshir@gmail.com>
 # Co-Maintainer: MarsSeed <marcell.meszaros@runbox.eu>
 # Contributor: Felix Yan <felixonmars@archlinux.org>
@@ -16,7 +18,7 @@ pkgname=(lib32-gst-plugins-ugly)
 readonly LIB32GST_DISABLE_{AV,BAD}
 
 pkgver=1.24.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -92,16 +94,16 @@ checkdepends=(xorg-server-xvfb)
 options=(!debug)
 source=(
 	"git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=$pkgver"
-	0001-Allow-disabling-gstreamer.patch
-	0002-HACK-meson-Disable-broken-tests.patch
+	"0001-Allow-disabling-gstreamer.patch"
+	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags"
 )
-sha256sums=('SKIP'
+sha256sums=('8d8f5077c4e3aa61031bca0991d43c4bef5fe789456a6b8ba159b2c9f634fe0c'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
-            '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
+            '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda'
+            'c61f2bc7ce473fd4956bdd7d22294b700b7fff6915df7155bb6ca4604ac7c421')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
-source+=('0003-mr6505.diff::https://github.com/OpenMandrivaAssociation/gst-libav/raw/master/6505.diff')
-sha256sums+=('0a8488ee58f22edd0d5d158c2b2347c0ddeb9f8112c903bac2bb36bed107d783')
+source+=('0003-libav-Fix-compatibility-with-ffmpeg-7.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/main/0002-libav-Fix-compatibility-with-ffmpeg-7.patch')
 
 pkgver() {
 	cd gstreamer
@@ -118,7 +120,7 @@ prepare() {
 	git apply -3 ../0002-HACK-meson-Disable-broken-tests.patch
 
 	# libav: Fix compatibility with ffmpeg 7
-	patch -d subprojects -p0 -i "$srcdir"/0003-mr6505.diff
+	git apply -3 ../0003-libav-Fix-compatibility-with-ffmpeg-7.patch
 }
 
 _fix_pkgconf() {
