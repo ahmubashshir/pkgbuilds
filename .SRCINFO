@@ -1,6 +1,6 @@
 pkgbase = transmission-gtk3
 	pkgdesc = Fast, easy, and free BitTorrent client (GTK+ GUI)
-	pkgver = 4.0.5
+	pkgver = 4.0.6
 	pkgrel = 1
 	url = http://www.transmissionbt.com/
 	arch = x86_64
@@ -31,7 +31,7 @@ pkgbase = transmission-gtk3
 	optdepends = transmission-cli: daemon and web support
 	provides = transmission-gtk
 	conflicts = transmission-gtk
-	source = https://github.com/transmission/transmission/releases/download/4.0.5/transmission-4.0.5.tar.xz
-	sha256sums = fd68ff114a479200043c30c7e69dba4c1932f7af36ca4c5b5d2edcb5866e6357
+	source = https://github.com/transmission/transmission/releases/download/4.0.6/transmission-4.0.6.tar.xz
+	sha256sums = 2a38fe6d8a23991680b691c277a335f8875bdeca2b97c6b26b598bc9c7b0c45f
 
 pkgname = transmission-gtk3
