@@ -9,7 +9,7 @@
 
 pkgname=transmission-gtk3
 pkgver=4.0.6
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url="http://www.transmissionbt.com/"
 pkgdesc='Fast, easy, and free BitTorrent client (GTK+ GUI)'
@@ -36,7 +36,14 @@ makedepends=(
   ninja
 )
 source=("https://github.com/transmission/transmission/releases/download/$pkgver/transmission-$pkgver.tar.xz")
-sha256sums=('2a38fe6d8a23991680b691c277a335f8875bdeca2b97c6b26b598bc9c7b0c45f')
+source+=("miniupnpc.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/transmission/-/raw/main/febfe49c.patch")
+sha256sums=('2a38fe6d8a23991680b691c277a335f8875bdeca2b97c6b26b598bc9c7b0c45f'
+            '1e5917c79a0c17595f18b544c5c1ab101ecbef5b2ffb0ca42a0a3b221a85e044')
+
+prepare() {
+  cd "${pkgname%-*}-$pkgver"
+  patch -p1 < ../miniupnpc.patch # Fix build with miniupnpc 2.2.8
+}
 
 build() {
   export CFLAGS+=" -ffat-lto-objects -Wno-all"
