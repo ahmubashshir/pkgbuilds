@@ -30,15 +30,19 @@ jobs:
 
     - name: Configure ssh
       run: |
+        set -x
         mkdir -p /root/.ssh
         chmod -R 700 /root/.ssh
         cd /root/.ssh
 
-        printf "${{ secrets.SSH_KEY }}\n" > id_rsa
+        echo '$SSH_KEY_DATA' | envsubst > id_rsa
         chmod 600 id_rsa
 
         ssh-keyscan aur.archlinux.org > known_hosts
         chmod 600 known_hosts
+      env:
+        SSH_KEY_DATA: ${{ secrets.SSH_KEY }}
+
     - name: Setup aurpublish
       run: ./.helpers/aur/pub setup
 
