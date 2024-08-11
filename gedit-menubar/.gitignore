@@ -2,3 +2,5 @@
 !.SRCINFO
 !PKGBUILD
 !menubar.patch
+!bottom-panel.patch
+!.gitignore
