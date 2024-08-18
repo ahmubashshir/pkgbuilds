@@ -17,7 +17,7 @@ pkgname=(lib32-gst-plugins-ugly)
 )
 readonly LIB32GST_DISABLE_{AV,BAD}
 
-pkgver=1.24.5
+pkgver=1.24.6
 pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -97,13 +97,10 @@ source=(
 	"0001-Allow-disabling-gstreamer.patch"
 	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags"
 )
-sha256sums=('5bc0b57b43f71b0e93dea1f22377bd62e98b4b1dd63b24d60c7106b9e861aa98'
+sha256sums=('0c81f74b8f5546eda2491739901560b673c61d8425c5c2d36b298a0a1c2fd7ed'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
-            '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda'
-            'c61f2bc7ce473fd4956bdd7d22294b700b7fff6915df7155bb6ca4604ac7c421')
+            '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
-
-source+=('0003-libav-Fix-compatibility-with-ffmpeg-7.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/main/0002-libav-Fix-compatibility-with-ffmpeg-7.patch')
 
 pkgver() {
 	cd gstreamer
