@@ -4,4 +4,3 @@
 !0002-HACK-meson-Disable-broken-tests.patch
 !.gitignore
 !0001-Allow-disabling-gstreamer.patch
-!0003-mr6505.diff
