@@ -18,7 +18,7 @@ pkgname=(lib32-gst-plugins-ugly)
 readonly LIB32GST_DISABLE_{AV,BAD}
 
 pkgver=1.24.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -115,9 +115,6 @@ prepare() {
 
 	# Disable broken tests
 	git apply -3 ../0002-HACK-meson-Disable-broken-tests.patch
-
-	# libav: Fix compatibility with ffmpeg 7
-	git apply -3 ../0003-libav-Fix-compatibility-with-ffmpeg-7.patch
 }
 
 _fix_pkgconf() {
