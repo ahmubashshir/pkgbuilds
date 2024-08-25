@@ -1,7 +1,7 @@
 pkgbase = gedit-menubar
 	pkgdesc = GNOME Text Editor (Patched to show menubar)
 	pkgver = 47.0
-	pkgrel = 3
+	pkgrel = 4
 	url = https://wiki.gnome.org/Apps/Gedit
 	arch = x86_64
 	groups = gnome-extra
@@ -14,6 +14,7 @@ pkgbase = gedit-menubar
 	makedepends = meson
 	makedepends = vala
 	makedepends = yelp-tools
+	makedepends = glib2-devel
 	depends = bash
 	depends = cairo
 	depends = dconf
