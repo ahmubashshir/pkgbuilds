@@ -5,7 +5,7 @@
 
 pkgname=gedit-menubar
 pkgver=47.0
-pkgrel=3
+pkgrel=4
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
@@ -42,6 +42,7 @@ makedepends=(
 	meson
 	vala
 	yelp-tools
+	glib2-devel
 )
 optdepends=('gedit-plugins: Additional features')
 conflicts=('gedit-code-assistance<=3.16.0+4+gd19b879-1' 'gedit')
