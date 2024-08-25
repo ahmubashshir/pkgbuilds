@@ -5,18 +5,33 @@
 
 pkgname=gedit-menubar
 pkgver=47.0
-pkgrel=2
+pkgrel=3
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
 license=('GPL-2.0-or-later')
 depends=(
-	gsettings-desktop-schemas
-	gspell
-	libgedit-amtk
-	libpeas
-	python-gobject
-	libgedit-tepl
+  bash
+  cairo
+  dconf
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  gobject-introspection-runtime
+  gsettings-desktop-schemas
+  gspell
+  gtk3
+  hicolor-icon-theme
+  libgedit-amtk
+  libgedit-gfls
+  libgedit-gtksourceview
+  libgedit-tepl
+  libgirepository
+  libpeas
+  pango
+  python
+  python-gobject
 )
 makedepends=(
 	appstream-glib
@@ -43,11 +58,12 @@ sha256sums=('fe9f6e5acb3a6dff0c8d6ea150eb85b3923e05acb4ce10c4b3e65c04f049895a'
             '139e3001397f1c716261dbefaefe92ce5165b4e1f4254a57d079234f85c46de3')
 
 pkgver() {
-  git -C ${pkgname%-*} describe --tags | sed 's/-/+/g'
+  git -C gedit describe --tags | sed 's/-/+/g'
 }
 
 prepare() {
-  cd ${pkgname%-*}
+  cd gedit
+
   git submodule init
   git submodule set-url subprojects/libgd "$srcdir/libgd"
   git -c protocol.file.allow=always submodule update
@@ -57,9 +73,12 @@ prepare() {
 }
 
 build() {
-  arch-meson ${pkgname%-*} build \
-    -D gtk_doc=true \
+  local meson_options=(
+    -D gtk_doc=true
     -D require_all_tests=true
+  )
+
+  arch-meson gedit build "${meson_options[@]}"
   meson compile -C build
 }
 
