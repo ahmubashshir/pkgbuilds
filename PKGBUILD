@@ -17,8 +17,8 @@ pkgname=(lib32-gst-plugins-ugly)
 )
 readonly LIB32GST_DISABLE_{AV,BAD}
 
-pkgver=1.24.6
-pkgrel=2
+pkgver=1.24.7
+pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -97,7 +97,7 @@ source=(
 	"0001-Allow-disabling-gstreamer.patch"
 	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags"
 )
-sha256sums=('0c81f74b8f5546eda2491739901560b673c61d8425c5c2d36b298a0a1c2fd7ed'
+sha256sums=('d138dc58683daf2cf17cc5b14c1aae1f9ff8fbdfdd351481d79dade0d54b4d59'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
             '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
