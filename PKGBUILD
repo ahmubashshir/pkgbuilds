@@ -5,7 +5,7 @@
 
 pkgname=gedit-menubar
 pkgver=48.0
-pkgrel=1
+pkgrel=3
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
@@ -44,19 +44,18 @@ makedepends=(
 	yelp-tools
 	glib2-devel
 )
-optdepends=('gedit-plugins: Additional features')
+optdepends=('gedit-plugins: Additional features'
+            'gedit-externaltools-plugin: External Tools support')
 conflicts=('gedit-code-assistance<=3.16.0+4+gd19b879-1' 'gedit')
 provides=('gedit')
 groups=(gnome-extra)
 
 source=("git+https://gitlab.gnome.org/GNOME/gedit.git#tag=$pkgver"
         "git+https://gitlab.gnome.org/GNOME/libgd.git"
-        "menubar.patch"
-        "bottom-panel.patch")
+        "menubar.patch")
 sha256sums=('19235cc79f395786bdc0351ceeef710aadb8890bd71972a83f3b9d3aaff965f4'
             'SKIP'
-            '80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163'
-            '139e3001397f1c716261dbefaefe92ce5165b4e1f4254a57d079234f85c46de3')
+            '80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163')
 
 pkgver() {
   git -C gedit describe --tags | sed 's/-/+/g'
@@ -70,7 +69,6 @@ prepare() {
   git -c protocol.file.allow=always submodule update
 
   patch -p1 < "$srcdir/menubar.patch"
-  patch -p1 < "$srcdir/bottom-panel.patch"
 }
 
 build() {
