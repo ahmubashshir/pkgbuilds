@@ -1,11 +1,9 @@
 # Maintainer:
 # Contributor: Ahmad Hasan Mubashshir <ahmubashshir@gmail.com>
 
-: ${_pkgtype=-git}
-
 _pkgname="zapret"
-pkgbase="$_pkgname${_pkgtype:-}"
-pkgver=62.r3.gc532ec4
+pkgbase="$_pkgname-git"
+pkgver=65.r13.g755915a
 pkgrel=1
 pkgdesc="Bypass deep packet inspection"
 url="https://github.com/bol-van/zapret"
@@ -89,10 +87,10 @@ _package_zapret-common() {
   for n in ip2net mdig; do
     install -Dm755 "binaries/my/$n" "$pkgdir/opt/zapret/$n/$n"
   done
-  install -Dm644 init.d/systemd/* -t "$pkgdir/usr/lib/systemd/system"
-  install -Dm755 init.d/sysv/* -t "$pkgdir/opt/zapret/init.d/sysv"
-  install -Dm755 ipset/* -t "$pkgdir/opt/zapret/ipset"
-  install -Dm644 common/* -t "$pkgdir/opt/zapret/common"
+  install -Dm644 init.d/systemd/* -t "$pkgdir/usr/lib/systemd/system/"
+  install -Dm755 init.d/sysv/{functions,zapret} -t "$pkgdir/opt/zapret/init.d/sysv/"
+  install -Dm755 ipset/* -t "$pkgdir/opt/zapret/ipset/"
+  install -Dm644 common/* -t "$pkgdir/opt/zapret/common/"
   install -Dm644 "$srcdir/sysusers.conf" "$pkgdir/usr/lib/sysusers.d/zapret.conf"
   install -Dm644 docs/LICENSE.txt "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
 
@@ -163,6 +161,7 @@ _package_zapret-docs() {
   _rm changes.txt
 }
 
+_pkgtype="${pkgbase#$_pkgname}"
 pkgname=(
   "$_pkgname-nfqws${_pkgtype:-}"
   "$_pkgname-tpws${_pkgtype:-}"
