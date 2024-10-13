@@ -4,7 +4,7 @@
 _pkgname="zapret"
 pkgbase="$_pkgname-git"
 pkgver=65.r13.g755915a
-pkgrel=1
+pkgrel=2
 pkgdesc="Bypass deep packet inspection"
 url="https://github.com/bol-van/zapret"
 license=('MIT')
@@ -87,6 +87,11 @@ _package_zapret-common() {
   for n in ip2net mdig; do
     install -Dm755 "binaries/my/$n" "$pkgdir/opt/zapret/$n/$n"
   done
+
+  install -Dm755 blockcheck.sh -t "$pkgdir"/opt/zapret/
+  install -dm755 "$pkgdir"/opt/zapret/files
+  cp --reflink=auto -a files/* "$pkgdir"/opt/zapret/files
+
   install -Dm644 init.d/systemd/* -t "$pkgdir/usr/lib/systemd/system/"
   install -Dm755 init.d/sysv/{functions,zapret} -t "$pkgdir/opt/zapret/init.d/sysv/"
   install -Dm755 ipset/* -t "$pkgdir/opt/zapret/ipset/"
