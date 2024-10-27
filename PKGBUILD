@@ -5,7 +5,7 @@
 
 pkgname=gedit-menubar
 pkgver=48.0
-pkgrel=3
+pkgrel=4
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
@@ -34,6 +34,7 @@ depends=(
   python-gobject
 )
 makedepends=(
+	appstream
 	appstream-glib
 	desktop-file-utils
 	git
