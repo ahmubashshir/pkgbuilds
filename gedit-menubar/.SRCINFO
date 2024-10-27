@@ -1,11 +1,12 @@
 pkgbase = gedit-menubar
 	pkgdesc = GNOME Text Editor (Patched to show menubar)
 	pkgver = 48.0
-	pkgrel = 3
+	pkgrel = 4
 	url = https://wiki.gnome.org/Apps/Gedit
 	arch = x86_64
 	groups = gnome-extra
 	license = GPL-2.0-or-later
+	makedepends = appstream
 	makedepends = appstream-glib
 	makedepends = desktop-file-utils
 	makedepends = git
