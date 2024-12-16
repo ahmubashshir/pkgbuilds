@@ -18,7 +18,7 @@ pkgname=(lib32-gst-plugins-ugly)
 readonly LIB32GST_DISABLE_{AV,BAD}
 
 pkgver=1.24.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -102,6 +102,9 @@ sha256sums=('ba32c30f43b40c4d88f71d2fd5e9ceb03c864ebb0e77eb488ca73b6c67653c4c'
             '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
+source+=("0003-x265-Unbreak-with-4.0.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/main/0002-x265enc-Unbreak-build-with-x265-4.0.patch")
+sha256sums+=('d5748293a5b7fae0d41365a7cbf48c6a45bb1e3047ca1613539f0357a932890f')
+
 pkgver() {
 	cd gstreamer
 	git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
@@ -109,12 +112,11 @@ pkgver() {
 
 prepare() {
 	cd gstreamer
-
-	# Disable gstreamer
-	git apply -3 ../0001-Allow-disabling-gstreamer.patch
-
-	# Disable broken tests
-	git apply -3 ../0002-HACK-meson-Disable-broken-tests.patch
+	printf '%s\n' ${source[@]%::*} \
+	| grep '\.patch$' \
+	| sort -nu \
+	| sed 's@^@../@' \
+	| xargs -n1 git apply -3
 }
 
 _fix_pkgconf() {
