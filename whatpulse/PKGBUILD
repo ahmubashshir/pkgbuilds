@@ -6,8 +6,8 @@
 # from: function __check_update
 
 pkgname=whatpulse
-pkgver=5.8.2
-pkgrel=2
+pkgver=5.9.1
+pkgrel=1
 
 pkgdesc="Measures your keyboard, mouse and application usage, network traffic and uptime."
 arch=('x86_64')
@@ -38,7 +38,7 @@ source_x86_64=("${pkgname}-${pkgver}-amd64.AppImage::https://releases-dev.whatpu
 sha256sums=('5a4a6676a6b513824eeac8a2accd6de9e8bd2bc11b3e2967fa2b2a18d29fa35d'
             'f3d16ee6e325a3c657e7af1ebc9f6e35d09ff5c03b0a8b0450611e610c5d6d32'
             'cfea47f15bb3ba2494a7b1d50367139dc12709fc1e8ba0b25d86ee5f09748619')
-sha256sums_x86_64=('012f5a58dd9065aaacfc406cf65ad157184a7a3d9667f691d2e05b23b5bb0473')
+sha256sums_x86_64=('010225909df86f17ee887f42a2e160860d1addf4dc63bf03b8953c98c3b9092e')
 
 _extract() {
 	./"${pkgname}-${pkgver}-amd64.AppImage" --appimage-extract "$1"
@@ -46,7 +46,7 @@ _extract() {
 
 __filter_latest() {
 	xmllint --nowarning --html \
-		--xpath '//main//h2[contains(@class, " font-bold tracking-tight ")]/text()' 2> /dev/null \
+		--xpath '//main//h2[contains(@class, " font-bold tracking-tight ")]/text()' - 2> /dev/null \
 	| sed -nE 's/^.+ \(?([0-9]+\.[0-9.]+)\)?$/\1/p' \
 	| sort -rV \
 	| head -n1
