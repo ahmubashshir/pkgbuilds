@@ -7,7 +7,7 @@
 
 pkgname=whatpulse
 pkgver=5.8.2
-pkgrel=1
+pkgrel=2
 
 pkgdesc="Measures your keyboard, mouse and application usage, network traffic and uptime."
 arch=('x86_64')
@@ -44,10 +44,16 @@ _extract() {
 	./"${pkgname}-${pkgver}-amd64.AppImage" --appimage-extract "$1"
 }
 
+__filter_latest() {
+	xmllint --nowarning --html \
+		--xpath '//main//h2[contains(@class, " font-bold tracking-tight ")]/text()' 2> /dev/null \
+	| sed -nE 's/^.+ \(?([0-9]+\.[0-9.]+)\)?$/\1/p' \
+	| sort -rV \
+	| head -n1
+}
+
 __check_update() {
-	if ! curl --disable -Ls "$url/releasenotes/?beta=false" \
-		| xmllint --nowarning --html \
-			--xpath 'normalize-space(//div[@id="page-content"]//li[contains(concat(" ",normalize-space(@class)," ")," task-info ")][1]//h3/text()[1])' - 2> /dev/null
+	if ! curl --disable -Ls "$url/releasenotes/?beta=false" | __filter_latest
 		then echo $pkgver
 	fi
 }
@@ -90,7 +96,7 @@ package() {
 	# Generate and install icons
 	for size in 16 20 22 24 28 32 36 44 48 64 72 96 128 150 192 256 310 384 512 1024; do
 		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${size}x${size}/apps"
-		convert \
+		magick \
 			+gravity -crop 615x680+0+0 +repage \
 			-resize "${size}x${size}" -background none \
 			-gravity center -extent "${size}x${size}" \
