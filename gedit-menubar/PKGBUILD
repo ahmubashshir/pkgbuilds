@@ -4,7 +4,7 @@
 # match! alpha[0-9]*$
 
 pkgname=gedit-menubar
-pkgver=48.1
+pkgver=48.2
 pkgrel=1
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
@@ -54,7 +54,7 @@ groups=(gnome-extra)
 source=("git+https://gitlab.gnome.org/GNOME/gedit.git#tag=$pkgver"
         "git+https://gitlab.gnome.org/GNOME/libgd.git"
         "menubar.patch")
-sha256sums=('517f3afbaaf60db0b7376c17aff0da43de1161b267330c4864d74e5ad38bf8a0'
+sha256sums=('5aec8e65b9e0e5bf0e99233a55080216ec80ba0502212ff96c651dea4631eb08'
             'SKIP'
             '80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163')
 
@@ -68,6 +68,9 @@ prepare() {
   git submodule init
   git submodule set-url subprojects/libgd "$srcdir/libgd"
   git -c protocol.file.allow=always submodule update
+  git revert -n 8559f20790e67fe189477b2ea503425fa75c0411
+  git revert -n ed13f96587f3516e16d562f6b4c2513dca3793af
+  git revert -n ab7bb15d742a5cf647eea8e809e87217c2196b9d
 
   patch -p1 < "$srcdir/menubar.patch"
 }
