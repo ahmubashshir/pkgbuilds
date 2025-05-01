@@ -8,37 +8,84 @@
 # what: libvirt/libvirt
 # match! -rc[0-9]+$
 
-pkgname=libvirt
-pkgver=10.10.0
-pkgrel=1
+pkgname=(libvirt libvirt-storage-gluster libvirt-storage-iscsi-direct)
+epoch=1
+pkgver=11.2.0
+pkgrel=2
 pkgdesc="API for controlling virtualization engines (openvz,kvm,qemu,virtualbox,xen,etc)"
 arch=('x86_64')
 url="https://libvirt.org/"
 license=('LGPL-2.1-or-later'
          'GPL-3.0-or-later') # libvirt_parthelper links to libparted
-depends=('libpciaccess' 'yajl' 'fuse3' 'gnutls' 'parted' 'libssh' 'libxml2'
-         'numactl' 'polkit' 'libnbd' 'libnl')
-makedepends=('meson' 'libxslt' 'python-docutils' 'lvm2' 'open-iscsi' 'libiscsi' 'glusterfs'
-             'bash-completion' 'dnsmasq' 'iproute2' 'qemu-base')
-optdepends=('libvirt-storage-gluster: Gluster storage backend'
-            'libvirt-storage-iscsi-direct: iSCSI-direct storage backend'
-            'gettext: required for libvirt-guests.service'
-            'openbsd-netcat: for remote management over ssh'
-            'dmidecode: DMI system info support'
-            'dnsmasq: required for default NAT/DHCP for guests'
-            'radvd: IPv6 RAD support'
-            'iptables-nft: required for default NAT networking'
-            'qemu-desktop: QEMU/KVM support'
-            'qemu-emulators-full: Support of additional QEMU architectures'
-            'lvm2: Logical Volume Manager support'
-            'open-iscsi: iSCSI support via iscsiadm'
-            'swtpm: TPM emulator support')
+depends=(
+  acl
+  audit
+  bash
+  curl
+  device-mapper
+  fuse3
+  gcc-libs
+  glib2
+  glibc
+  gnutls
+  json-c
+  libcap-ng
+  libnbd
+  libnl
+  libpcap
+  libpciaccess
+  libsasl
+  libssh
+  libssh2
+  libtirpc
+  libxml2
+  numactl
+  parted
+  polkit
+  readline
+  systemd-libs
+  util-linux-libs
+)
+makedepends=(
+  bash-completion
+  dnsmasq
+  glusterfs
+  iproute2
+  libiscsi
+  libxslt
+  lvm2
+  meson
+  open-iscsi
+  python-docutils
+  qemu-base
+  systemd
+)
+optdepends=(
+  'dmidecode: DMI system info support'
+  'dnsmasq: required for default NAT/DHCP for guests'
+  'gettext: required for libvirt-guests.service'
+  'iptables-nft: required for default NAT networking'
+  'libvirt-python: for virt-qemu-qmp-proxy and virt-qemu-sev-validate commands'
+  'libvirt-storage-gluster: Gluster storage backend'
+  'libvirt-storage-iscsi-direct: iSCSI-direct storage backend'
+  'lvm2: Logical Volume Manager support'
+  'openbsd-netcat: for remote management over ssh'
+  'open-iscsi: iSCSI support via iscsiadm'
+  'python-cryptography: for virt-qemu-sev-validate command'
+  'python-lxml: for virt-qemu-sev-validate command'
+  'qemu-base: QEMU/KVM support'
+  'qemu-desktop: QEMU/KVM desktop support'
+  'qemu-emulators-full: Support of additional QEMU architectures'
+  'radvd: IPv6 RAD support'
+  'swtpm: TPM emulator support'
+)
 
 backup=(
   'etc/libvirt/libvirt-admin.conf'
   'etc/libvirt/libvirt.conf'
   'etc/libvirt/libvirtd.conf'
   'etc/libvirt/lxc.conf'
+  'etc/libvirt/network.conf'
   'etc/libvirt/nwfilter/allow-arp.xml'
   'etc/libvirt/nwfilter/allow-dhcp-server.xml'
   'etc/libvirt/nwfilter/allow-dhcpv6-server.xml'
@@ -63,6 +110,7 @@ backup=(
   'etc/libvirt/nwfilter/no-other-rarp-traffic.xml'
   'etc/libvirt/nwfilter/qemu-announce-self-rarp.xml'
   'etc/libvirt/nwfilter/qemu-announce-self.xml'
+  'etc/libvirt/network.conf'
   'etc/libvirt/qemu.conf'
   'etc/libvirt/qemu-lockd.conf'
   'etc/libvirt/qemu/networks/default.xml'
@@ -88,12 +136,13 @@ backup=(
 source=(
   "https://libvirt.org/sources/$pkgname-$pkgver.tar.xz"{,.asc}
 )
-sha256sums=('e1bd7bd31b7c0d0ae073dec050bb5b0232b3e4adebdc58ea82fe8b366c765796'
+sha256sums=('07b91052b4e44cf2e5c21bfe1a8095f98db47a917b38d95d2a7ec50ff6bdade9'
             'SKIP')
 validpgpkeys=('453B65310595562855471199CA68BE8010084C9C') # Jiří Denemark <jdenemar@redhat.com>
 
 # libvirt-xen
-pkgname=libvirt-xen
+unset epoch
+pkgname=(libvirt-xen)
 depends+=('xen')
 backup+=(
   'etc/libvirt/libxl.conf'
@@ -104,10 +153,9 @@ backup+=(
 
 prepare() {
   cd "${pkgname%*-xen}-${pkgver}"
-
   sed -i 's|/sysconfig/|/conf.d/|g' \
     src/remote/libvirtd.service.in \
-    tools/{libvirt-guests.service,libvirt-guests.sh,virt-pki-validate}.in \
+    tools/{libvirt-guests.service,libvirt-guests.sh}.in \
     docs/manpages/libvirt-guests.rst \
     src/locking/virtlockd.service.in \
     src/logging/virtlogd.service.in
@@ -148,30 +196,64 @@ check() {
   meson test -C build --print-errorlogs
 }
 
-package() {
+package_libvirt-xen() {
   conflicts=('libvirt')
   provides=("libvirt=$pkgver" 'libvirt.so' 'libvirt-admin.so' 'libvirt-lxc.so' 'libvirt-qemu.so')
 
   meson install -C build --destdir "$pkgdir"
   mkdir -p "$pkgdir"/usr/lib/{sysusers,tmpfiles}.d
   echo 'g libvirt - -' > "$pkgdir/usr/lib/sysusers.d/libvirt-qemu.conf"
-  echo 'u libvirt-qemu /var/lib/libvirt "Libvirt QEMU user"' >> "$pkgdir/usr/lib/sysusers.d/libvirt.conf"
+  echo 'u! libvirt-qemu /var/lib/libvirt "Libvirt QEMU user"' >> "$pkgdir/usr/lib/sysusers.d/libvirt.conf"
   echo 'm libvirt-qemu kvm' >> "$pkgdir/usr/lib/sysusers.d/libvirt.conf"
   echo 'z /var/lib/libvirt/qemu 0751' > "$pkgdir/usr/lib/tmpfiles.d/libvirt.conf"
 
   chmod 600 "$pkgdir"/etc/libvirt/nwfilter/*.xml \
     "$pkgdir/etc/libvirt/qemu/networks/default.xml"
   chmod 700 "$pkgdir"/etc/libvirt/secrets
+  chmod 711 "$pkgdir"/var/lib/libvirt/swtpm
 
   rm -rf \
     "$pkgdir/run" \
     "$pkgdir/var/lib/libvirt/qemu" \
-    "$pkgdir/var/cache/libvirt/qemu"
+    "$pkgdir/var/cache/libvirt/qemu" \
+#    "$pkgdir/etc/logrotate.d/libvirtd.libxl"
 
   rm -f "$pkgdir/etc/libvirt/qemu/networks/autostart/default.xml"
 
-  # remove split modules
-  rm "$pkgdir"/usr/lib/libvirt/storage-backend/libvirt_storage_backend_gluster.so
-  rm "$pkgdir/usr/lib/libvirt/storage-backend/libvirt_storage_backend_iscsi-direct.so"
-  rm "$pkgdir/usr/lib/libvirt/storage-file/libvirt_storage_file_gluster.so"
+  # move split modules
+  mv "$pkgdir"/usr/lib/libvirt/storage-backend/libvirt_storage_backend_gluster.so "$pkgdir/../"
+  mv "$pkgdir/usr/lib/libvirt/storage-backend/libvirt_storage_backend_iscsi-direct.so" "$pkgdir/../"
+  mv "$pkgdir/usr/lib/libvirt/storage-file/libvirt_storage_file_gluster.so" "$pkgdir/../"
+}
+return 0;
+
+package_libvirt-storage-gluster() {
+  pkgdesc="Libvirt Gluster storage backend"
+  depends=(
+    "libvirt=$pkgver"
+    gcc-libs
+    glib2
+    glibc
+    glusterfs
+  )
+  optdepends=()
+  backup=()
+
+  install -Dv -t "$pkgdir/usr/lib/libvirt/storage-backend" "$pkgdir/../libvirt_storage_backend_gluster.so"
+  install -Dv -t "$pkgdir/usr/lib/libvirt/storage-file" "$pkgdir/../libvirt_storage_file_gluster.so"
+}
+
+package_libvirt-storage-iscsi-direct() {
+  pkgdesc="Libvirt iSCSI-direct storage backend"
+  depends=(
+    "libvirt=$pkgver"
+    gcc-libs
+    glib2
+    glibc
+    libiscsi
+  )
+  optdepends=()
+  backup=()
+
+  install -Dv -t "$pkgdir/usr/lib/libvirt/storage-backend" "$pkgdir/../libvirt_storage_backend_iscsi-direct.so"
 }
