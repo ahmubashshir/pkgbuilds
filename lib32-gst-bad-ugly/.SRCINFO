@@ -1,7 +1,7 @@
 pkgbase = lib32-gst-bad-ugly
 	pkgdesc = Multimedia graph framework (32-bit)
-	pkgver = 1.24.10
-	pkgrel = 2
+	pkgver = 1.26.1
+	pkgrel = 1
 	url = https://gstreamer.freedesktop.org/
 	arch = x86_64
 	license = LGPL
@@ -15,7 +15,7 @@ pkgbase = lib32-gst-bad-ugly
 	makedepends = lib32-gtk3
 	makedepends = python-packaging
 	makedepends = glib2-devel
-	makedepends = lib32-gst-plugins-base-libs>=1.24.10
+	makedepends = lib32-gst-plugins-base-libs>=1.26.1
 	makedepends = lib32-a52dec
 	makedepends = lib32-libcdio
 	makedepends = lib32-libdvdread
@@ -80,18 +80,16 @@ pkgbase = lib32-gst-bad-ugly
 	makedepends = lib32-json-glib
 	makedepends = lib32-ffmpeg
 	options = !debug
-	source = git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=1.24.10
+	source = git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=1.26.1
 	source = 0001-Allow-disabling-gstreamer.patch
-	source = 0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/1.24.10-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags
-	source = 0003-x265-Unbreak-with-4.0.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/main/0002-x265enc-Unbreak-build-with-x265-4.0.patch
-	sha256sums = ba32c30f43b40c4d88f71d2fd5e9ceb03c864ebb0e77eb488ca73b6c67653c4c
+	source = 0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/1.26.1-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags
+	sha256sums = 66a5ec7e33e2574bfbfa919c1b468f4e761a138865889a9b8bf8c6dfa14af0e6
 	sha256sums = dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50
 	sha256sums = 405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda
-	sha256sums = d5748293a5b7fae0d41365a7cbf48c6a45bb1e3047ca1613539f0357a932890f
 
 pkgname = lib32-gst-plugins-ugly
 	pkgdesc = Multimedia graph framework (32-bit) - ugly plugins
-	depends = lib32-gst-plugins-base-libs>=1.24.10
+	depends = lib32-gst-plugins-base-libs>=1.26.1
 	depends = lib32-a52dec
 	depends = lib32-libcdio
 	depends = lib32-libdvdread
@@ -102,14 +100,14 @@ pkgname = lib32-gst-plugins-ugly
 
 pkgname = lib32-gst-libav
 	pkgdesc = Multimedia graph framework (32-bit) - libav plugin
-	depends = lib32-gst-plugins-base-libs>=1.24.10
+	depends = lib32-gst-plugins-base-libs>=1.26.1
 	depends = lib32-ffmpeg
-	provides = lib32-gst-ffmpeg=1.24.10
+	provides = lib32-gst-ffmpeg=1.26.1
 	replaces = lib32-gst-libav-latest
 
 pkgname = lib32-gst-plugins-bad-libs
 	pkgdesc = Multimedia graph framework (32-bit) - bad
-	depends = lib32-gst-plugins-base-libs>=1.24.10
+	depends = lib32-gst-plugins-base-libs>=1.26.1
 	depends = lib32-libdrm
 	depends = lib32-libgudev
 	depends = lib32-libusb
@@ -120,7 +118,7 @@ pkgname = lib32-gst-plugins-bad-libs
 
 pkgname = lib32-gst-plugins-bad
 	pkgdesc = Multimedia graph framework (32-bit) - bad plugins
-	depends = lib32-gst-plugins-bad-libs>=1.24.10
+	depends = lib32-gst-plugins-bad-libs>=1.26.1
 	depends = lib32-aom
 	depends = lib32-bzip2
 	depends = lib32-curl
