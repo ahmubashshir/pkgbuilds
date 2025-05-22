@@ -17,8 +17,8 @@ pkgname=(lib32-gst-plugins-ugly)
 )
 readonly LIB32GST_DISABLE_{AV,BAD}
 
-pkgver=1.24.10
-pkgrel=2
+pkgver=1.26.1
+pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -97,13 +97,10 @@ source=(
 	"0001-Allow-disabling-gstreamer.patch"
 	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags"
 )
-sha256sums=('ba32c30f43b40c4d88f71d2fd5e9ceb03c864ebb0e77eb488ca73b6c67653c4c'
+sha256sums=('66a5ec7e33e2574bfbfa919c1b468f4e761a138865889a9b8bf8c6dfa14af0e6'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
             '405adb6bf85b5e130cc1d2ba100abd5fa5c0694ceea3a5082365a966061d7eda')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
-
-source+=("0003-x265-Unbreak-with-4.0.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/main/0002-x265enc-Unbreak-build-with-x265-4.0.patch")
-sha256sums+=('d5748293a5b7fae0d41365a7cbf48c6a45bb1e3047ca1613539f0357a932890f')
 
 pkgver() {
 	cd gstreamer
