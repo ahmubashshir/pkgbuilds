@@ -1,7 +1,7 @@
 pkgbase = stow-dotfiles
 	pkgdesc = Manage installation of multiple softwares in the same directory tree (with AitorATuin's patches for --dotfiles)
 	pkgver = 2.3.1
-	pkgrel = 2
+	pkgrel = 3
 	url = https://www.gnu.org/software/stow/
 	arch = any
 	license = GPL3

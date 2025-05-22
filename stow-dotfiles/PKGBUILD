@@ -4,10 +4,11 @@
 # Contributor: eric
 # Contributor: Tom Newsom
 # Contributor: Chris Brannon
+# pkg: github aspiers/stow
 
 pkgname=stow-dotfiles
 pkgver=2.3.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Manage installation of multiple softwares in the same directory tree (with AitorATuin's patches for --dotfiles)"
 url='https://www.gnu.org/software/stow/'
 arch=('any')
