@@ -7,7 +7,7 @@ pkgname=(
     "ibus-openbangla-git"
     "fcitx5-openbangla-git"
 )
-pkgver=2.0.0.r107.gbe784f6
+pkgver=2.0.0.r78.gaddbd4e
 pkgrel=1
 pkgdesc="An OpenSource, Unicode compliant Bengali Input Method"
 arch=('x86_64')
@@ -18,8 +18,10 @@ optdepends=('ttf-indic-otf: fonts for Bangla and other Indic scripts'
             'ttf-freebanglafont: miscellaneous fonts for Bangla script')
 source=(
     "${pkgbase%*-git}::git+https://github.com/OpenBangla/OpenBangla-Keyboard#branch=develop"
+    "riti::git+https://github.com/OpenBangla/riti"
 )
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            'SKIP')
 pkgver()
 {
     cd "$srcdir/${pkgbase%*-git}"
@@ -32,7 +34,10 @@ pkgver()
 
 prepare() {
     cd "$srcdir/${pkgbase%*-git}"
-    git submodule update --init --recursive
+    git submodule init
+    git config submodule."src/engine/riti".url $srcdir/riti
+    git -c protocol.file.allow=always submodule update
+    git -C src/engine/riti checkout master
 }
 
 build() {
