@@ -7,7 +7,7 @@ pkgname=(
     "ibus-openbangla-git"
     "fcitx5-openbangla-git"
 )
-pkgver=2.0.0.r78.gaddbd4e
+pkgver=2.0.0.r107.gbe784f6
 pkgrel=1
 pkgdesc="An OpenSource, Unicode compliant Bengali Input Method"
 arch=('x86_64')
@@ -37,7 +37,6 @@ prepare() {
     git submodule init
     git config submodule."src/engine/riti".url $srcdir/riti
     git -c protocol.file.allow=always submodule update
-    git -C src/engine/riti checkout master
 }
 
 build() {
