@@ -12,7 +12,7 @@ _modname="${pkgname#nginx-mainline-mod-}"
 
 pkgdesc='Lua script engine module for mainline nginx'
 arch=('i686' 'x86_64')
-depends=('nginx-mainline' 'nginx-mainline-mod-ndk' 'luajit' 'lua-resty-core' 'pcre')
+depends=('nginx-mainline' 'nginx-mainline-mod-ndk' 'luajit' 'lua-resty-core' 'pcre2')
 makedepends=('nginx-mainline-src')
 url="https://github.com/openresty/lua-nginx-module"
 license=('BSD')
@@ -38,8 +38,7 @@ build() {
 		grep -o -- '--prefix=.*$' |
 		xargs printf '%s\0' |
 		sed -z \
-			-e'/^--with-.*=dynamic$/d' \
-			-e'/^--with-ld-opt=/{s/-Wl,/\0-E,/;s/-Wl,/-lpcre \0/}' |
+			-e'/^--with-.*=dynamic$/d' |
 		xargs -t0 /usr/src/nginx/configure \
 			--add-dynamic-module=../$_modname-nginx-module-$pkgver
 	make modules
