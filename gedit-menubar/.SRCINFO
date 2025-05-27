@@ -45,8 +45,12 @@ pkgbase = gedit-menubar
 	source = git+https://gitlab.gnome.org/GNOME/gedit.git#tag=48.2
 	source = git+https://gitlab.gnome.org/GNOME/libgd.git
 	source = menubar.patch
+	source = gedit-new-tab.patch
+	source = gedit-prgname.patch
 	sha256sums = 5aec8e65b9e0e5bf0e99233a55080216ec80ba0502212ff96c651dea4631eb08
 	sha256sums = SKIP
 	sha256sums = 80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163
+	sha256sums = faadcf029fe7e6505314547ff53ab61b9e843be1f9f749ea08a1297baa77c13c
+	sha256sums = 774dbbf0023ec97b2c9c67c33ecf0c721b94519e86846efe013d671277048b08
 
 pkgname = gedit-menubar

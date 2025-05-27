@@ -1,0 +1,40 @@
+From f9dedaeee7c74cab779a4d3642715960b7a530fe Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ball=C3=B3=20Gy=C3=B6rgy?= <ballogyor@gmail.com>
+Date: Sat, 5 Apr 2025 01:06:39 +0200
+Subject: [PATCH] App: don't create new tab unless requested
+
+When the existing window is activated, it's not needed to create new tab.
+This fixes the problem that a new document is always created on launch if
+gedit is already running, even if it's not requested with the
+"--new-document" option.
+---
+ gedit/gedit-app.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/gedit/gedit-app.c b/gedit/gedit-app.c
+index 72e937dd0..18da5b233 100644
+--- a/gedit/gedit-app.c
++++ b/gedit/gedit-app.c
+@@ -115,7 +115,7 @@ static const GOptionEntry option_entries[] =
+ 
+ 	/* Create a new empty document */
+ 	{
+-		"new-document", '\0', 0, G_OPTION_ARG_NONE, NULL,
++		"new-document", 'n', 0, G_OPTION_ARG_NONE, NULL,
+ 		N_("Create a new document in an existing instance of gedit"),
+ 		NULL
+ 	},
+@@ -320,6 +320,10 @@ open_files (GApplication            *application,
+ 		gedit_debug_message (DEBUG_APP, "Show window");
+ 		gtk_widget_show (GTK_WIDGET (window));
+ 	}
++	else
++	{
++		doc_created = TRUE;
++	}
+ 
+ 	if (stdin_stream != NULL)
+ 	{
+-- 
+GitLab
+
