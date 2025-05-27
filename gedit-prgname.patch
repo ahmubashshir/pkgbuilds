@@ -1,0 +1,41 @@
+From dd299f07559f65e56f4d2796a0eff27e46fbac87 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ball=C3=B3=20Gy=C3=B6rgy?= <ballogyor@gmail.com>
+Date: Sat, 31 Aug 2024 13:20:31 +0200
+Subject: [PATCH] App: Set prgname to application ID
+
+Using the application ID ensures that Wayland compositors could match the
+window with the application and show the appropriate icon for them.
+---
+ gedit/gedit-app.c    | 2 ++
+ gedit/gedit-recent.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/gedit/gedit-app.c b/gedit/gedit-app.c
+index cf1d5adcb..b61d51bcd 100644
+--- a/gedit/gedit-app.c
++++ b/gedit/gedit-app.c
+@@ -701,6 +701,8 @@ gedit_app_startup (GApplication *application)
+ 
+ 	G_APPLICATION_CLASS (gedit_app_parent_class)->startup (application);
+ 
++	g_set_prgname ("org.gnome.gedit");
++
+ 	/* Setup debugging */
+ 	gedit_debug_init ();
+ 	gedit_debug_message (DEBUG_APP, "Startup");
+diff --git a/gedit/gedit-recent.c b/gedit/gedit-recent.c
+index d8cd7bd79..39ee24667 100644
+--- a/gedit/gedit-recent.c
++++ b/gedit/gedit-recent.c
+@@ -54,7 +54,7 @@ gedit_recent_add_document (GeditDocument *document)
+ 	 */
+ 	recent_data->mime_type = gedit_document_get_mime_type (document);
+ 	recent_data->app_name = (gchar *) g_get_application_name ();
+-	recent_data->app_exec = g_strjoin (" ", g_get_prgname (), "%u", NULL);
++	recent_data->app_exec = g_strdup ("gedit %u");
+ 
+ 	uri = g_file_get_uri (location);
+ 
+-- 
+GitLab
+

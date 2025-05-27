@@ -3,3 +3,5 @@
 !PKGBUILD
 !menubar.patch
 !.gitignore
+!gedit-new-tab.patch
+!gedit-prgname.patch
