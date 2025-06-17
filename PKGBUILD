@@ -19,6 +19,7 @@ readonly LIB32GST_DISABLE_{AV,BAD}
 
 pkgver=1.26.2
 pkgrel=2
+pkgrel_arch=2 # pkgrel version from arch repos
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -95,7 +96,7 @@ options=(!debug)
 source=(
 	"git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=$pkgver"
 	"0001-Allow-disabling-gstreamer.patch"
-	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-$pkgrel/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags&inline=false"
+	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-$pkgrel_arch/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags&inline=false"
 )
 b2sums=('81cfa0fb9729937967fdbb43fac87657a1691d2c1dcafdb0c58dc57c017ccb555849b111572a7ed2564909b6e56c4c62a07bd044734eed1c2ba4dd33deb8e73d'
 	'66bb4f48207b442d6d598b8d32a5c3e9f0111a7f40bd48cbddd494f19834d3eafd64feda044ffa7aadc950c50a0f74152ac62591a940ae65078239c8f8d38f36'
