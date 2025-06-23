@@ -5,7 +5,7 @@
 
 pkgname=gedit-menubar
 pkgver=48.2
-pkgrel=1
+pkgrel=2
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
@@ -28,10 +28,10 @@ depends=(
   libgedit-gtksourceview
   libgedit-tepl
   libgirepository
-  libpeas
+  libpeas136
   pango
   python
-  python-gobject
+  python-gobject350
 )
 makedepends=(
 	appstream
