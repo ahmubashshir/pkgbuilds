@@ -17,7 +17,7 @@ pkgname=(lib32-gst-plugins-ugly)
 )
 readonly LIB32GST_DISABLE_{AV,BAD}
 
-pkgver=1.26.2
+pkgver=1.26.3
 pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -97,9 +97,9 @@ source=(
 	"0001-Allow-disabling-gstreamer.patch"
 	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags&inline=false"
 )
-sha256sums=('bb1246bff043279cb80b0c2dc90d6cd04aa33419f405d17326a61ee211c1a291'
+sha256sums=('a91c4fdf086aaa9a94d7e029459b4bcf34b1c33acc1d5e1259a6dcf1b3f6ab5d'
             'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
-            'SKIP')
+            '5e3889aded253e5d506eaa0e355a4b840319d44a3a62e0add823013955532170')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
 pkgver() {
@@ -221,6 +221,13 @@ build() {
 		-D gst-plugins-bad:zxing=disabled # due to no lib32-zxing support
 		-D gst-plugins-bad:amfcodec=disabled # only support windows
 		-D gst-plugins-ugly:sidplay=disabled
+		-D gst-plugins-bad:cuda-nvmm=disabled # no nvidia for wine
+		-D gst-plugins-bad:androidmedia=disabled # not android
+		-D gst-plugins-bad:lcevcdecoder=disabled
+		-D gst-plugins-bad:lcevcencoder=disabled
+		-D gst-plugins-bad:nvcomp=disabled # no nvidia
+		-D gst-plugins-bad:nvdswrapper=disabled # no nvidia
+		-D gst-plugins-bad:svtjpegxs=disabled
 	)
 
 	arch-meson gstreamer build "${meson_options[@]}"
