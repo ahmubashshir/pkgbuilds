@@ -10,8 +10,8 @@
 
 pkgname=(libvirt libvirt-storage-gluster libvirt-storage-iscsi-direct)
 epoch=1
-pkgver=11.2.0
-pkgrel=2
+pkgver=11.7.0
+pkgrel=1
 pkgdesc="API for controlling virtualization engines (openvz,kvm,qemu,virtualbox,xen,etc)"
 arch=('x86_64')
 url="https://libvirt.org/"
@@ -136,7 +136,7 @@ backup=(
 source=(
   "https://libvirt.org/sources/$pkgname-$pkgver.tar.xz"{,.asc}
 )
-sha256sums=('07b91052b4e44cf2e5c21bfe1a8095f98db47a917b38d95d2a7ec50ff6bdade9'
+sha256sums=('dd56db0ced8baf668f476698db9956f160c93c0ec0c47a0603843235bf156f78'
             'SKIP')
 validpgpkeys=('453B65310595562855471199CA68BE8010084C9C') # Jiří Denemark <jdenemar@redhat.com>
 
