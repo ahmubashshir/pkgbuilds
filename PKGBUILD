@@ -17,8 +17,9 @@ pkgname=(lib32-gst-plugins-ugly)
 )
 readonly LIB32GST_DISABLE_{AV,BAD}
 
-pkgver=1.26.3
+pkgver=1.26.6
 pkgrel=1
+pkgrel_arch=2 # pkgrel version from arch repos
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -95,11 +96,11 @@ options=(!debug)
 source=(
 	"git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git#tag=$pkgver"
 	"0001-Allow-disabling-gstreamer.patch"
-	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-1/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags&inline=false"
+	"0002-HACK-meson-Disable-broken-tests.patch::https://gitlab.archlinux.org/archlinux/packaging/packages/gstreamer/-/raw/$pkgver-$pkgrel_arch/0001-HACK-meson-Disable-broken-tests.patch?ref_type=tags&inline=false"
 )
-sha256sums=('a91c4fdf086aaa9a94d7e029459b4bcf34b1c33acc1d5e1259a6dcf1b3f6ab5d'
-            'dd928acaa15670225059b36ca5a29d808feba3855700f9b36128a2e55a335a50'
-            '5e3889aded253e5d506eaa0e355a4b840319d44a3a62e0add823013955532170')
+b2sums=('b7b704d91bf0fcc3a88232fc502052d9758a682d959875256335dcec33c14c808bcff872e870f28b3aed52c956c3246bb5df131b141260cd927320c282b24b74'
+        '66bb4f48207b442d6d598b8d32a5c3e9f0111a7f40bd48cbddd494f19834d3eafd64feda044ffa7aadc950c50a0f74152ac62591a940ae65078239c8f8d38f36'
+        'c95d516e5c39362bc9b386e35e216c2a6aa04fab06b4000dc911d50ca483357e3a3e675b71842411cef2e023128aa79681e1d707fe26261753aea61bbba6d2b7')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
 pkgver() {
@@ -203,6 +204,15 @@ build() {
 		-D gst-plugins-bad:webrtcdsp=disabled
 		-D gst-plugins-bad:aja=disabled
 		-D gst-plugins-bad:qt6d3d11=disabled
+                -D gst-plugins-bad:androidmedia=disabled # Android only
+                -D gst-plugins-bad:lcevcdecoder=disabled # requires dep lcevc_dec
+                -D gst-plugins-bad:lcevcencoder=disabled
+                -D gst-plugins-bad:svtjpegxs=disabled # requires dep svtjpegxs
+                # nvidia stuff
+                -D gst-plugins-bad:cuda-nvmm=disabled
+                -D gst-plugins-bad:cuda-nvmm-include-path=disabled
+                -D gst-plugins-bad:nvcomp=disabled
+                -D gst-plugins-bad:nvdswrapper=disabled
 		# -- end -- -D gst-plugins-bad:=disabled
 		-D gst-plugins-bad:opencv=disabled # due to no lib32-opencv
 		-D gst-plugins-bad:msdk=disabled # due to no msdk (32-bit) support
