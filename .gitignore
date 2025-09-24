@@ -5,3 +5,4 @@
 !.gitignore
 !gedit-new-tab.patch
 !gedit-prgname.patch
+!gir2.patch
