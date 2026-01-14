@@ -4,8 +4,8 @@
 # match! alpha[0-9]*$
 
 pkgname=gedit-menubar
-pkgver=48.2
-pkgrel=3
+pkgver=49.0
+pkgrel=1
 pkgdesc="GNOME Text Editor (Patched to show menubar)"
 url="https://wiki.gnome.org/Apps/Gedit"
 arch=(x86_64)
@@ -27,7 +27,6 @@ depends=(
   libgedit-gfls
   libgedit-gtksourceview
   libgedit-tepl
-  libgirepository
   'libpeas>=1.38'
   pango
   python
@@ -53,16 +52,16 @@ groups=(gnome-extra)
 
 source=("git+https://gitlab.gnome.org/GNOME/gedit.git#tag=$pkgver"
         "git+https://gitlab.gnome.org/GNOME/libgd.git"
-        "menubar.patch"
-        gedit-new-tab.patch
-        gedit-prgname.patch
+        "https://gitlab.archlinux.org/archlinux/packaging/packages/gedit/-/raw/$pkgver-1/gedit-new-tab.patch"
+        "https://gitlab.archlinux.org/archlinux/packaging/packages/gedit/-/raw/$pkgver-1/gedit-prgname.patch"
+        menubar.patch
         gir2.patch
 )
-sha256sums=('5aec8e65b9e0e5bf0e99233a55080216ec80ba0502212ff96c651dea4631eb08'
+sha256sums=('057d8a3f13e62ad15903a0035b80e551d9a1ccc91bd608314e32c8e8f5f1200c'
             'SKIP'
-            '80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163'
             'faadcf029fe7e6505314547ff53ab61b9e843be1f9f749ea08a1297baa77c13c'
             '774dbbf0023ec97b2c9c67c33ecf0c721b94519e86846efe013d671277048b08'
+            '80692c1e39bc59f997f7d6857fc7b7d65a94aa53ff0f20de6e633a3596b20163'
             '9446c65fc8b392c07575566e4c8943c3f3d23abd354ba240d7529ee65f95aa32')
 
 pkgver() {
