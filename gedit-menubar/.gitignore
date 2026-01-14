@@ -3,6 +3,6 @@
 !PKGBUILD
 !menubar.patch
 !.gitignore
+!gir2.patch
 !gedit-new-tab.patch
 !gedit-prgname.patch
-!gir2.patch
