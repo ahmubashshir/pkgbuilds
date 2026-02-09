@@ -18,8 +18,8 @@ pkgname=(lib32-gst-plugins-ugly)
 readonly LIB32GST_DISABLE_{AV,BAD}
 
 pkgver=1.26.10
-pkgrel=1
-pkgrel_arch=3 # pkgrel version from arch repos
+pkgrel=4
+pkgrel_arch=4 # pkgrel version from arch repos
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
 arch=(x86_64)
@@ -100,7 +100,7 @@ source=(
 )
 b2sums=('17a6826af9ed8ae50a215e6f831d8cb2b85b80f8899610febfcf8733000d185caf9c153cb3ed6197fffedcad4f7d4547e13baddc74018eca8a4b2c660c316376'
         '66bb4f48207b442d6d598b8d32a5c3e9f0111a7f40bd48cbddd494f19834d3eafd64feda044ffa7aadc950c50a0f74152ac62591a940ae65078239c8f8d38f36'
-        '7c7064c8c9906f1e1d73d7516e69bf938d02259eb825053e9c33733f0403f70f5d9802a537a1780f25bf6354c5b3e5237dc712991e78e652706abbc77348d579')
+        '21d74423e44f4d9918ef477d7664b65d2848b14830f6d339c525f8de54aedfaae274ac772f157938f9a98bc9d1806210d807cab8ccf9dd95fcaf0547b587c36a')
 #validpgpkeys=(D637032E45B8C6585B9456565D2EEE6F6F349D7C) # Tim Müller <tim@gstreamer-foundation.org>
 
 pkgver() {
