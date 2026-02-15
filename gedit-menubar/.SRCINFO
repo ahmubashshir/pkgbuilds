@@ -1,10 +1,9 @@
 pkgbase = gedit-menubar
-	pkgdesc = GNOME Text Editor (Patched to show menubar)
+	pkgdesc = Easy-to-use general-purpose text editor (Patched to show menubar)
 	pkgver = 49.0
 	pkgrel = 1
-	url = https://wiki.gnome.org/Apps/Gedit
+	url = https://gedit-text-editor.org/
 	arch = x86_64
-	groups = gnome-extra
 	license = GPL-2.0-or-later
 	makedepends = appstream
 	makedepends = appstream-glib
@@ -16,7 +15,6 @@ pkgbase = gedit-menubar
 	makedepends = vala
 	makedepends = yelp-tools
 	makedepends = glib2-devel
-	depends = bash
 	depends = cairo
 	depends = dconf
 	depends = gcc-libs
@@ -39,9 +37,8 @@ pkgbase = gedit-menubar
 	optdepends = gedit-plugins: Additional features
 	optdepends = gedit-externaltools-plugin: External Tools support
 	provides = gedit
-	conflicts = gedit-code-assistance<=3.16.0+4+gd19b879-1
 	conflicts = gedit
-	source = git+https://gitlab.gnome.org/GNOME/gedit.git#tag=49.0
+	source = git+https://gitlab.gnome.org/World/gedit/gedit.git#tag=49.0
 	source = git+https://gitlab.gnome.org/GNOME/libgd.git
 	source = https://gitlab.archlinux.org/archlinux/packaging/packages/gedit/-/raw/49.0-1/gedit-new-tab.patch
 	source = https://gitlab.archlinux.org/archlinux/packaging/packages/gedit/-/raw/49.0-1/gedit-prgname.patch

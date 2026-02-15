@@ -6,12 +6,11 @@
 pkgname=gedit-menubar
 pkgver=49.0
 pkgrel=1
-pkgdesc="GNOME Text Editor (Patched to show menubar)"
-url="https://wiki.gnome.org/Apps/Gedit"
+pkgdesc="Easy-to-use general-purpose text editor (Patched to show menubar)"
 arch=(x86_64)
-license=('GPL-2.0-or-later')
+url='https://gedit-text-editor.org/'
+license=(GPL-2.0-or-later)
 depends=(
-  bash
   cairo
   dconf
   gcc-libs
@@ -46,11 +45,10 @@ makedepends=(
 )
 optdepends=('gedit-plugins: Additional features'
             'gedit-externaltools-plugin: External Tools support')
-conflicts=('gedit-code-assistance<=3.16.0+4+gd19b879-1' 'gedit')
+conflicts=('gedit')
 provides=('gedit')
-groups=(gnome-extra)
 
-source=("git+https://gitlab.gnome.org/GNOME/gedit.git#tag=$pkgver"
+source=("git+https://gitlab.gnome.org/World/gedit/gedit.git#tag=${pkgver/[a-z]/.&}"
         "git+https://gitlab.gnome.org/GNOME/libgd.git"
         "https://gitlab.archlinux.org/archlinux/packaging/packages/gedit/-/raw/$pkgver-1/gedit-new-tab.patch"
         "https://gitlab.archlinux.org/archlinux/packaging/packages/gedit/-/raw/$pkgver-1/gedit-prgname.patch"
@@ -102,3 +100,5 @@ check() {
 package() {
   meson install -C build --destdir "$pkgdir"
 }
+
+# vim:set sw=2 sts=-1 et:
