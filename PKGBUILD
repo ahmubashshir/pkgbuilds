@@ -1,13 +1,13 @@
 # Maintainer: Mubashshir <ahmubashshir@gmail.com>
 pkgname=jelling
 pkgver=r19.3661895
-pkgrel=1
+pkgrel=2
 pkgdesc='A FreeOTP token receiver for Linux.'
 arch=(x86_64)
 url='https://github.com/freeotp/jelling-linux'
 license=(Apache-2.0)
 depends=(bluez systemd-libs)
-makedepends=(git meson)
+makedepends=(git meson bluez-libs)
 source=(
 	"$pkgname::git+$url.git#branch=master"
 	"sd-eventloop.patch::https://github.com/freeotp/jelling-linux/pull/7.patch"
