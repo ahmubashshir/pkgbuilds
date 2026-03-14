@@ -1,0 +1,17 @@
+pkgbase = jelling
+	pkgdesc = A FreeOTP token receiver for Linux.
+	pkgver = r19.3661895
+	pkgrel = 1
+	url = https://github.com/freeotp/jelling-linux
+	arch = x86_64
+	license = Apache-2.0
+	makedepends = git
+	makedepends = meson
+	depends = bluez
+	depends = systemd-libs
+	source = jelling::git+https://github.com/freeotp/jelling-linux.git#branch=master
+	source = sd-eventloop.patch::https://github.com/freeotp/jelling-linux/pull/7.patch
+	sha256sums = SKIP
+	sha256sums = 86da4758f75cb5101464f9b3f5f8742dd9fb6eb7075dcd4f199d11cd2c487a90
+
+pkgname = jelling
