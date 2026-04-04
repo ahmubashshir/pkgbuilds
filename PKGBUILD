@@ -4,24 +4,23 @@
 # match! alpha[0-9]*$
 
 pkgname=gedit-menubar
-pkgver=49.0
+pkgver=50.0
 pkgrel=1
-pkgdesc="Easy-to-use general-purpose text editor (Patched to show menubar)"
+pkgdesc='Easy-to-use general-purpose text editor (Patched to show menubar)'
 arch=(x86_64)
 url='https://gedit-text-editor.org/'
 license=(GPL-2.0-or-later)
 depends=(
   cairo
   dconf
-  gcc-libs
   gdk-pixbuf2
   glib2
   glibc
-  gobject-introspection-runtime
   gsettings-desktop-schemas
   gspell
   gtk3
   hicolor-icon-theme
+  libgcc
   libgedit-amtk
   libgedit-gfls
   libgedit-gtksourceview
@@ -32,16 +31,13 @@ depends=(
   python-gobject
 )
 makedepends=(
-	appstream
-	appstream-glib
-	desktop-file-utils
-	git
-	gobject-introspection
-	gtk-doc
-	meson
-	vala
-	yelp-tools
-	glib2-devel
+  appstream
+  git
+  glib2-devel
+  gobject-introspection
+  gtk-doc
+  itstool
+  meson
 )
 optdepends=('gedit-plugins: Additional features'
             'gedit-externaltools-plugin: External Tools support')
@@ -55,7 +51,7 @@ source=("git+https://gitlab.gnome.org/World/gedit/gedit.git#tag=${pkgver/[a-z]/.
         menubar.patch
         gir2.patch
 )
-sha256sums=('057d8a3f13e62ad15903a0035b80e551d9a1ccc91bd608314e32c8e8f5f1200c'
+sha256sums=('a9cb3c7738be271feb71c018e1393f2200456504c041ab86f4ba8188db66c439'
             'SKIP'
             'faadcf029fe7e6505314547ff53ab61b9e843be1f9f749ea08a1297baa77c13c'
             '774dbbf0023ec97b2c9c67c33ecf0c721b94519e86846efe013d671277048b08'
