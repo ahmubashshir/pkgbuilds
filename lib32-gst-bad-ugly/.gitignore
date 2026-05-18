@@ -1,6 +1,0 @@
-*
-!PKGBUILD
-!.SRCINFO
-!0002-HACK-meson-Disable-broken-tests.patch
-!.gitignore
-!0001-Allow-disabling-gstreamer.patch
