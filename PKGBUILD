@@ -1,3 +1,7 @@
+# Maintainer: Ahmad Hasan Mubashshir <ahmubashshir@gmail.com>
+# from: github
+# what: pymumu/smartdns
+
 pkgname=smartdns-plugin-ui
 pkgver=47.1
 pkgrel=2
