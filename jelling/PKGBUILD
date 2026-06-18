@@ -13,7 +13,7 @@ source=(
 	"sd-eventloop.patch::https://github.com/freeotp/jelling-linux/pull/7.patch"
 )
 sha256sums=('SKIP'
-            '86da4758f75cb5101464f9b3f5f8742dd9fb6eb7075dcd4f199d11cd2c487a90')
+            '7fc54ec7c469831fc845e81ca908540994085b0dfac978521a867efd008b2a40')
 
 pkgver() {
 	(
