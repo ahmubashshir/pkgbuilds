@@ -1,7 +1,7 @@
 pkgbase = smartdns-plugin-ui
 	pkgdesc = Dashboard UI plugin for smartdns
 	pkgver = 48
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/pymumu/smartdns
 	arch = x86_64
 	license = GPL
