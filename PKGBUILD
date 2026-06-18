@@ -1,12 +1,11 @@
 # Maintainer: Ahmad Hasan Mubashshir <ahmubashshir@gmail.com>
 # from: github
 # what: pymumu/smartdns
-# match: ^Release
-# strip! ^Release
+# prefix! Release
 
 pkgname=smartdns-plugin-ui
-pkgver=48
-pkgrel=2
+pkgver=48.1
+pkgrel=1
 pkgdesc="Dashboard UI plugin for smartdns"
 arch=('x86_64')
 license=('GPL')
@@ -14,7 +13,7 @@ url="https://github.com/pymumu/smartdns"
 depends=("smartdns=$pkgver" 'smartdns-webui')
 makedepends=('git' 'rust' 'rust-bindgen')
 source=("git+https://github.com/pymumu/smartdns.git#tag=Release$pkgver")
-sha512sums=('b3d1b882d40b9c2098627e3461ab577e8ee0ebfddf36de8a16c70ada66ff356cb5cfeb21f35a146554f7a48b534f15f7394a5f71047caac38ee17b4e96c77056')
+sha512sums=('7ea081ec87ca5da876f712238d4c5f27017d91ae12667621eb560fe2526578ac31e46c8385dff6dedfd314c35b4f29e073811bcc39995e67e9e3e4d7f634a31d')
 
 build() {
   cd smartdns
