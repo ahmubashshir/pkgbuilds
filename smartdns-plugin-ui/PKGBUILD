@@ -1,10 +1,12 @@
 # Maintainer: Ahmad Hasan Mubashshir <ahmubashshir@gmail.com>
 # from: github
 # what: pymumu/smartdns
+# match: ^Release
+# strip! ^Release
 
 pkgname=smartdns-plugin-ui
 pkgver=48
-pkgrel=1
+pkgrel=2
 pkgdesc="Dashboard UI plugin for smartdns"
 arch=('x86_64')
 license=('GPL')
