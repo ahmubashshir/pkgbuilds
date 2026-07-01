@@ -4,7 +4,7 @@
 # prefix! Release
 
 pkgname=smartdns-plugin-ui
-pkgver=48.1
+pkgver=48.2
 pkgrel=1
 pkgdesc="Dashboard UI plugin for smartdns"
 arch=('x86_64')
@@ -13,7 +13,7 @@ url="https://github.com/pymumu/smartdns"
 depends=("smartdns=$pkgver" 'smartdns-webui')
 makedepends=('git' 'rust' 'rust-bindgen')
 source=("git+https://github.com/pymumu/smartdns.git#tag=Release$pkgver")
-sha512sums=('7ea081ec87ca5da876f712238d4c5f27017d91ae12667621eb560fe2526578ac31e46c8385dff6dedfd314c35b4f29e073811bcc39995e67e9e3e4d7f634a31d')
+sha512sums=('f488b4ba40d348d3f79b25d092ef1a987cf9d58bf796c22a352fc896fc61f270abdd14e324da5a83abb0f3052982c93004e828a3f86aa0a24ccb1fcf6f39af4f')
 
 build() {
   cd smartdns
